@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "pkief.material-icon-theme",
+    "dbaeumer.vscode-eslint"
+  ]
+}

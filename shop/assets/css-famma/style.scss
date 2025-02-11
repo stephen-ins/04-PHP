@@ -6,14 +6,14 @@ $textCol: #1f1f1f;
 
 // import fonts -  font-family: 'Poppins', sans-serif and  font-family: 'Playfair Display', serif
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap");
 
 @mixin main-font {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 @mixin second-font {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
 }
 
 @mixin hero_btn($col1, $col2, $pad1, $pad2, $bRadius) {
@@ -127,9 +127,8 @@ a:focus {
 .sub_page {
   .hero_area {
     min-height: auto;
-    box-shadow: 0 0 5px 0 rgba($color: #000000, $alpha: .25);
+    box-shadow: 0 0 5px 0 rgba($color: #000000, $alpha: 0.25);
   }
-
 }
 
 .header_section {
@@ -251,11 +250,7 @@ a:focus {
         top: 0;
       }
     }
-
-
   }
-
-
 }
 
 /*end header section*/
@@ -278,7 +273,6 @@ a:focus {
   }
 
   .detail-box {
-
     h1 {
       font-size: 3.5rem;
       font-weight: bold;
@@ -298,16 +292,13 @@ a:focus {
       @include hero_btn($primary1, $white, 10px, 45px, 0);
       margin-top: 10px;
     }
-
   }
 
   .img-box {
     img {
       width: 100%;
     }
-
   }
-
 
   .carousel-indicators {
     position: unset;
@@ -352,7 +343,6 @@ a:focus {
 
 // product section
 .product_section {
-
   .heading_container {
     margin-bottom: 20px;
   }
@@ -362,7 +352,7 @@ a:focus {
     margin-top: 25px;
     padding: 15px;
     background-color: #f7f8f9;
-    transition: all .3s;
+    transition: all 0.3s;
     overflow: hidden;
 
     .img-box {
@@ -374,7 +364,7 @@ a:focus {
       img {
         max-width: 100%;
         max-height: 160px;
-        transition: all .3s;
+        transition: all 0.3s;
       }
     }
 
@@ -419,11 +409,11 @@ a:focus {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba($color: #cac9c7, $alpha: .75);
+    background-color: rgba($color: #cac9c7, $alpha: 0.75);
     z-index: 3;
     opacity: 0;
     visibility: hidden;
-    transition: all .2s;
+    transition: all 0.2s;
     transform: translateY(100%);
   }
 
@@ -432,14 +422,13 @@ a:focus {
     flex-direction: column;
     align-items: center;
 
-
     a {
       display: inline-block;
       padding: 8px 15px;
       border-radius: 30px;
       width: 165px;
       text-align: center;
-      transition: all .3s;
+      transition: all 0.3s;
       margin: 5px 0;
     }
 
@@ -464,7 +453,6 @@ a:focus {
         color: $black;
       }
     }
-
   }
 
   .btn-box {
@@ -519,8 +507,6 @@ a:focus {
 // why section
 
 .why_section {
-
-
   .box {
     text-align: center;
     margin-top: 45px;
@@ -601,8 +587,6 @@ a:focus {
 // client section
 
 .client_section {
-
-
   .box {
     display: flex;
     flex-direction: column;
@@ -687,7 +671,6 @@ a:focus {
   .carousel-control-next {
     right: 25%;
   }
-
 }
 
 // end client section
@@ -716,7 +699,6 @@ a:focus {
   }
 
   .footer_contact {
-
     .contact_link_box {
       display: flex;
       flex-direction: column;
@@ -768,9 +750,6 @@ a:focus {
     }
   }
 
-
-
-
   .map_container {
     width: 100%;
     height: 175px;
@@ -787,7 +766,6 @@ a:focus {
       }
     }
   }
-
 
   .footer-info {
     text-align: center;

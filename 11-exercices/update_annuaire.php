@@ -43,7 +43,33 @@ if (isset($_GET['action']) && $_GET['action'] == 'update') {
   $reqUpdate->execute();
 }
 
+//   // Mise à jour des données du client
+//   if (isset($_GET['id'])) {
+//     $id = $_GET['id'];
+//     $reqUpdate = $connect_bdd->prepare("UPDATE annuaire SET nom = :nom, prenom = :prenom, telephone = :telephone, profession = :profession, ville = :ville, codepostal = :codepostal, adresse = :adresse, date_de_naissance = :date_de_naissance, sexe = :sexe, description = :description WHERE id_annuaire = :id");
+//     $reqUpdate->bindValue(':nom', $lastname, PDO::PARAM_STR);
+//     $reqUpdate->bindValue(':prenom', $firstname, PDO::PARAM_STR);
+//     $reqUpdate->bindValue(':telephone', $phone, PDO::PARAM_STR);
+//     $reqUpdate->bindValue(':profession', $work, PDO::PARAM_STR);
+//     $reqUpdate->bindValue(':ville', $city, PDO::PARAM_STR);
+//     $reqUpdate->bindValue(':codepostal', $zipcode, PDO::PARAM_STR);
+//     $reqUpdate->bindValue(':adresse', $location, PDO::PARAM_STR);
+//     $reqUpdate->bindValue(':date_de_naissance', $birthdate, PDO::PARAM_STR);
+//     $reqUpdate->bindValue(':sexe', $sexe, PDO::PARAM_STR);
+//     $reqUpdate->bindValue(':description', $message, PDO::PARAM_STR);
+//     $reqUpdate->bindValue(':id', $id, PDO::PARAM_INT);
+//     $reqUpdate->execute();
+//   }
+// }
 
+// // Récupérer les données actuelles du client
+// if (isset($_GET['id'])) {
+//   $id = $_GET['id'];
+//   $reqClient = $connect_bdd->prepare("SELECT * FROM annuaire WHERE id_annuaire = :id");
+//   $reqClient->bindValue(':id', $id, PDO::PARAM_INT);
+//   $reqClient->execute();
+//   $client = $reqClient->fetch(PDO::FETCH_ASSOC);
+// }
 
 
 

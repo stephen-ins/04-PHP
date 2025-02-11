@@ -171,21 +171,6 @@ echo "Nombre de clients : $countClient <br>";
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ?>
 
 <!--  -->

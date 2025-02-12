@@ -44,8 +44,6 @@ if (isset($_POST['submit'])) {
   }
 
 
-
-
   $data->bindValue(':nom', $_POST['nom'], PDO::PARAM_STR);
   $data->bindValue(':prenom', $_POST['prenom'], PDO::PARAM_STR);
   $data->bindValue(':telephone', $_POST['telephone'], PDO::PARAM_STR);

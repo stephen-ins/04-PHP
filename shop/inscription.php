@@ -1,6 +1,11 @@
 <?php
 require_once 'include/init.php';
 
+// Si l'user est connecté, il n'a rien à faire sur la page 'inscription', on le redirige vers la page index.php
+if (userConnected()) {
+  header('location: index.php');
+}
+
 /*
 
 1- Contrôler que l'on receptionne bien toute les données saisies dans le formulaire en PHP
@@ -32,6 +37,13 @@ require_once 'include/init.php';
 //   echo 'Password : ' . $_POST['password'] . '<br>';
 //   echo 'Repeat Password : ' . $_POST['repeat_password'] . '<br>';
 // }
+
+
+// Fonction REGEX déclarée
+function isValidMDP($mdp)
+{
+  return preg_match('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/', $mdp);
+};
 
 
 
@@ -95,10 +107,7 @@ if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
     // $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/"; 
     // echo preg_match($password_regex, 'secret'); // returns 0
     // echo preg_match($password_regex, '-Secr3t.'); // returns 1
-    function isValidMDP($mdp)
-    {
-      return preg_match('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/', $mdp);
-    };
+
 
     // ou bien "elseif (!preg_match($password_regex, $_POST['password']))" 
   } elseif (!isValidMDP($_POST['password'])) {
@@ -115,12 +124,44 @@ if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $errorRepeatPassword = '<small class="text-danger" style="background-color: yellow;"><strong>LE MOT DE PASSE NE CORRESPOND PAS !</strong></small>';
     $error = true;
   }
+  // Exo : Si l'utilisateur a correctement rempli le formulaire, executer la requete d'insertion en BDD (prepare + bindValue + execute), on redirige l'internaute vers la page connexion.php
+  // Requete d'insertion
+
+  if (!isset($error)) {
+    // Fonction de hashage clé de criptage. Le mot de passe n'est jamais concervé en clair dans la base de donnée.
+    // password_hash permet de créer une clé de hashage du mot de passe dans la BDD.
+    $hashPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+    $data = $connect_db->prepare("INSERT INTO user (firstName, lastName, email, address, city, zipcode, password) VALUES (:firstName, :lastName, :email, :address, :city, :zipcode, :password)");
+
+    $data->bindValue(':firstName', $_POST['firstName'], PDO::PARAM_STR);
+    $data->bindValue(':lastName', $_POST['lastName'], PDO::PARAM_STR);
+    $data->bindValue(':email', $_POST['email'], PDO::PARAM_STR);
+    $data->bindValue(':address', $_POST['address'], PDO::PARAM_STR);
+    $data->bindValue(':city', $_POST['city'], PDO::PARAM_STR);
+    $data->bindValue(':zipcode', $_POST['zipcode'], PDO::PARAM_STR);
+    // Insersion de la fonction de hashage du password
+    $data->bindValue(':password', $hashPassword, PDO::PARAM_STR);
+    $data->execute();
+
+    // Affichage du message de validation de création de compte -> il sera supprimé via le undset
+    // On stock dans le fichier de session de l'utilisateur(user), le fichier de session est stocké côté serveur et accessible sur n'importe quelle page du site, on stocke ici un message (flash) dans le session user.
+    $_SESSION['msgRegisterValidate'] = '<div class="p-3 bg-success text-white text-center">Félicitation ! Votre compte est créé. Vous pouvez dès à présent vous connecter.</div> ';
+
+    // Redirection sur la page connexion
+    header('location: connexion.php');
+  }
+
 
   // Si la variable $error n'est pas défini !! (isset), alors l'internaute a correctement  rempli le formulaire, il entre dans aucun cas de contrôle ci-dessus, alors on entre dans le IF.
   if (!isset($error)) {
-    $msgValidation = '<div class="alert alert-success text-center my-3"><strong>Félicitation ! Votre compte est créé</strong></div>';
+    $msgValidation = '<div class="alert alert-success text-center mb-3 my-3"><strong>Félicitation ! Votre compte est créé</strong></div>';
   }
 }
+
+
+
+
 
 
 

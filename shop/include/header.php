@@ -56,30 +56,55 @@
               <li class="nav-item">
                 <a class="nav-link" href="contact.php">Contact</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="connexion.php">Identifiez-vous</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="inscription.php">Inscription</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="profil.php">Mon compte</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  data-toggle="dropdown"
-                  role="button"
-                  aria-haspopup="true"
-                  aria-expanded="true">
-                  <span class="nav-label">BackOffice</span><span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="admin/gestion_boutique.php">Boutique</a></li>
-                  <li><a href="admin/gestion_commande.php">Commandes</a></li>
-                  <li><a href="admin/gestion_user.php">Utilisateurs</a></li>
-                </ul>
-              </li>
+
+              <?php if (!userConnected()): // ON entre dans le IF dans le cas où l'indice 'user' n'est pas définit dans la session, donc l'user n'est pas authentifié 
+              ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="connexion.php">Identifiez-vous</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="inscription.php">Inscription</a>
+                </li>
+              <?php endif; ?>
+
+
+              <?php if (userConnected()): // ON entre dans le IF dans le cas où l'indice 'user' n'est pas définit dans la session, donc l'user est authentifié 
+              ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="profil.php">Mon compte</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="connexion.php?action=logout">Déconnexion</a>
+                </li>
+              <?php endif; ?>
+
+
+
+
+              <?php if (adminConnected()):
+              ?>
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    data-toggle="dropdown"
+                    role="button"
+                    aria-haspopup="true"
+                    aria-expanded="true">
+                    <span class="nav-label">BackOffice</span><span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="admin/gestion_boutique.php">Boutique</a></li>
+                    <li><a href="admin/gestion_commande.php">Commandes</a></li>
+                    <li><a href="admin/gestion_user.php">Utilisateurs</a></li>
+                  </ul>
+                </li>
+              <?php endif; ?>
+
+
+
+
+
+
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <svg

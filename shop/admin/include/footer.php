@@ -2,13 +2,13 @@
   <div class="container-fluid">
     <div class="level">
       <div class="level-left">
-        <div class="level-item">© 2025, Grégory LACROIX</div>
+        <div class="level-item">© 2025 - Stephen Ins</div>
       </div>
     </div>
   </div>
 </footer>
 
-<div id="sample-modal" class="modal">
+<!-- <div id="sample-modal" class="modal">
   <div class="modal-background jb-modal-close"></div>
   <div class="modal-card">
     <header class="modal-card-head">
@@ -27,8 +27,8 @@
   <button
     class="modal-close is-large jb-modal-close"
     aria-label="close"></button>
-</div>
-</div>
+</div> -->
+
 
 <!-- Scripts below are for demo only -->
 <script type="text/javascript" src="../assets/js/main.min.js"></script>

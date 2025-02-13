@@ -18,6 +18,12 @@ if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
   // print_r($_POST);
   // echo '</pre>';
 
+  // Url de la photo actuelle
+  if (isset($_GET['action']) && $_GET["action"] == 'update') {
+    $pictureUrlDb = $_POST['current_picture'];
+  }
+
+
   // $_FILES est une superglobale qui permet de stocker les données d'un fichier uploadé (nom, extension, taille etc...)
   // Si une image à bien été uploadée
   if (!empty($_FILES['picture']['name'])) {
@@ -67,27 +73,59 @@ if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
       // 2 arguments : copy(chemin_source, chemin_destination)
       //               () image accéssible dans $_FILES , dossier de destination sur le serveur)
       copy($_FILES['picture']['tmp_name'], $pictureFolder);
-
-      // Requête SQL d'insertion pour insérer un produit en BDD
-      $data = $connect_db->prepare('INSERT INTO product (reference, category, title, color, size, description, price, stock, picture, public) VALUES (:reference, :category, :title, :color, :size, :description, :price, :stock, :picture, :public)');
-      $data->bindValue(':reference', $_POST['reference'], PDO::PARAM_STR);
-      $data->bindValue(':category', $_POST['category'], PDO::PARAM_STR);
-      $data->bindValue(':title', $_POST['title'], PDO::PARAM_STR);
-      $data->bindValue(':color', $_POST['color'], PDO::PARAM_STR);
-      $data->bindValue(':size', $_POST['size'], PDO::PARAM_STR);
-      $data->bindValue(':description', $_POST['description'], PDO::PARAM_STR);
-      $data->bindValue(':price', $_POST['price']);
-      $data->bindValue(':stock', $_POST['stock'], PDO::PARAM_INT);
-      $data->bindValue(':picture', $pictureUrlDb, PDO::PARAM_STR);
-      $data->bindValue(':public', $_POST['public'], PDO::PARAM_INT);
-      $data->execute();
     }
   }
+
+
+  // Requet SQL d'insertion / modification pour insérer / modifier un produit en BDD
+  if (isset($_GET['action']) && $_GET['action'] == 'update') {
+    $data = $connect_db->prepare('UPDATE product SET reference = :reference, category = :category, title = :title, color = :color, size = :size, description = :description, price = :price, stock = :stock, picture = :picture, public = :public WHERE id_product = :id');
+    $data->bindValue(':id', $_GET['id'], PDO::PARAM_INT);
+  } else {
+    $data = $connect_db->prepare('INSERT INTO product (reference, category, title, color, size, description, price, stock, picture, public) VALUES (:reference, :category, :title, :color, :size, :description, :price, :stock, :picture, :public)');
+  }
+
+
+  // Requête SQL d'insertion pour insérer un produit en BDD
+  $data->bindValue(':reference', $_POST['reference'], PDO::PARAM_STR);
+  $data->bindValue(':category', $_POST['category'], PDO::PARAM_STR);
+  $data->bindValue(':title', $_POST['title'], PDO::PARAM_STR);
+  $data->bindValue(':color', $_POST['color'], PDO::PARAM_STR);
+  $data->bindValue(':size', $_POST['size'], PDO::PARAM_STR);
+  $data->bindValue(':description', $_POST['description'], PDO::PARAM_STR);
+  $data->bindValue(':price', $_POST['price']);
+  $data->bindValue(':stock', $_POST['stock'], PDO::PARAM_INT);
+  $data->bindValue(':picture', $pictureUrlDb, PDO::PARAM_STR);
+  $data->bindValue(':public', $_POST['public'], PDO::PARAM_INT);
+  $data->execute();
+
+  $_SESSION['msgValidation'] = "L'enregistrement du produit a été effectué avec succès";
 }
 
+$data = $connect_db->query('SELECT * FROM product');
+$products = $data->fetchAll(PDO::FETCH_ASSOC);
 
+// Affichage du nombre de produit :
+// echo '<pre>';
+// print_r($products);
+// echo '</pre>';
 
+$nbProducts = $data->rowCount();
+if ($nbProducts <= 1)
+  $txt = "$nbProducts produit";
+else
+  $txt = "$nbProducts produits";
 
+if (isset($_GET['action']) && $_GET['action'] == 'update') {
+  $data = $connect_db->prepare('SELECT * FROM product WHERE id_product = :id');
+  $data->bindValue(':id', $_GET['id'], PDO::PARAM_INT);
+  $data->execute();
+  $currentProduct = $data->fetch(PDO::FETCH_ASSOC);
+
+  // echo '<pre>';
+  // print_r($currentProduct);
+  // echo '</pre>';
+}
 
 
 
@@ -127,16 +165,21 @@ require_once('include/header.php');
   </div>
 </section>
 <section class="section is-main-section">
-  <div class="notification is-primary">
-    <button class="delete"></button>
-    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-  </div>
+
+  <?php if (isset($_SESSION['msgValidation'])): ?>
+    <div class="notification is-primary">
+      <button class="delete"></button>
+      <?= $_SESSION['msgValidation']; ?>
+    </div>
+  <?php endif; ?>
+
   <div class="card has-table">
     <header class="card-header">
       <p class="card-header-title">
         <span class="icon"><span class="mdi mdi-shopping-outline"></span>
         </span>
-        10 produits
+        <!-- affichage du nombres de produits avec condition produit avec ou sans (s) -->
+        Liste des <?= $txt; ?>
       </p>
       <a href="#" class="card-header-icon">
         <span class="icon"><i class="mdi mdi-reload"></i></span>
@@ -149,68 +192,110 @@ require_once('include/header.php');
             class="table is-fullwidth is-striped is-hoverable is-fullwidth">
             <thead>
               <tr>
+
                 <th class="is-checkbox-cell">
                   <label class="b-checkbox checkbox">
                     <input type="checkbox" value="false" />
                     <span class="check"></span>
                   </label>
                 </th>
-                <th></th>
-                <th>Name</th>
-                <th>Company</th>
-                <th>City</th>
-                <th>Progress</th>
-                <th>Created</th>
-                <th></th>
+
+
+                <!--                  10 -->
+                <?php for ($i = 0; $i < $data->columnCount(); $i++):
+                  $dataColumn = $data->getColumnMeta($i);
+                  if ($dataColumn['name'] != 'id_product'):
+
+                    // echo '<pre>';
+                    // print_r($dataColumn);
+                    // echo '</pre>';
+
+                ?>
+                    <th><?= ucfirst($dataColumn['name']) ?></th>
+
+                <?php endif;
+                endfor;
+                ?>
+
+                <th>Actions</th>
+
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="is-checkbox-cell">
-                  <label class="b-checkbox checkbox">
-                    <input type="checkbox" value="false" />
-                    <span class="check"></span>
-                  </label>
-                </td>
-                <td class="is-image-cell">
-                  <div class="image">
-                    <img
-                      src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg"
-                      class="is-rounded" />
+
+              <?php foreach ($products as $arrayProduct): ?>
+
+                <tr>
+                  <td class="is-checkbox-cell">
+                    <label class="b-checkbox checkbox">
+                      <input type="checkbox" value="false" />
+                      <span class="check"></span>
+                    </label>
+                  </td>
+
+
+                  <?php foreach ($arrayProduct as $key => $value):
+                    if ($key != 'id_product'):
+                  ?>
+                      <td data-label="<?= ucfirst($key) ?>">
+                        <?php if ($key == 'picture'): ?>
+                          <img src="<?= $value ?>" class="picture__product" alt="<?= $arrayProduct['title'] ?>">
+                        <?php elseif ($key == 'price'): ?>
+                          <?= $value . ' €' ?>
+                        <?php else: ?>
+                          <?= $value ?>
+                        <?php endif; ?>
+
+                      </td>
+
+                  <?php endif;
+                  endforeach; ?>
+
+
+                  <td class="is-actions-cell">
+                    <div class="buttons is-right">
+                      <a
+                        href="?action=update&id=<?= $arrayProduct['id_product'] ?>"
+                        class="button is-small is-primary">
+
+                        <span class="icon"><span class="mdi mdi-pencil"></span></span>
+
+                      </a>
+
+                      <button
+                        type="button"
+                        class="button is-small is-danger jb-modal"
+                        data-target="sample-modal-<?= $arrayProduct['id_product'] ?>">
+                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                      </button>
+
+                    </div>
+                  </td>
+                </tr>
+
+                <div id="sample-modal-<?= $arrayProduct['id_product'] ?>" class="modal">
+                  <div class="modal-background jb-modal-close"></div>
+                  <div class="modal-card">
+                    <header class="modal-card-head">
+                      <p class="modal-card-title">Confirmer la suppression</p>
+                      <button class="delete jb-modal-close" aria-label="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                      <p>Voulez-vous réellement supprimer ce produit ?</p>
+                    </section>
+                    <footer class="modal-card-foot">
+                      <button class="button jb-modal-close">Annuler</button>
+                      <a href="?action=delete&id=<?= $arrayProduct['id_product'] ?>"
+                        class="button is-danger jb-modal-close">Supprimer</a>
+                    </footer>
                   </div>
-                </td>
-                <td data-label="Name">Rebecca Bauch</td>
-                <td data-label="Company">Daugherty-Daniel</td>
-                <td data-label="City">South Cory</td>
-                <td data-label="Progress" class="is-progress-cell">
-                  <progress
-                    max="100"
-                    class="progress is-small is-primary"
-                    value="79">
-                    79
-                  </progress>
-                </td>
-                <td data-label="Created">
-                  <small
-                    class="has-text-grey is-abbr-like"
-                    title="Oct 25, 2020">Oct 25, 2020</small>
-                </td>
-                <td class="is-actions-cell">
-                  <div class="buttons is-right">
-                    <button
-                      class="button is-small is-primary"
-                      type="button">
-                      <span class="icon"><i class="mdi mdi-eye"></i></span>
-                    </button>
-                    <button
-                      class="button is-small is-danger jb-modal"
-                      data-target="sample-modal"
-                      type="button">
-                      <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+                  <button
+                    class="modal-close is-large jb-modal-close"
+                    aria-label="close"></button>
+                </div>
+
+              <?php endforeach; ?>
+
             </tbody>
           </table>
         </div>
@@ -244,7 +329,12 @@ require_once('include/header.php');
     <header class="card-header">
       <p class="card-header-title">
         <span class="icon"><span class="mdi mdi-shopping-outline"></span></span>
-        Ajout Produit
+        <?php if (isset($_GET['action']) && $_GET['action'] == 'update'): ?>
+          Modification
+        <?php else: ?>
+          Ajout
+        <?php endif; ?>
+        produit
       </p>
     </header>
     <div class="card-content">
@@ -257,11 +347,11 @@ require_once('include/header.php');
           </div>
           <div class="field-body">
             <div class="field">
-              <input class="input" type="text" name="reference" placeholder="Entrer la référence du produit" />
-              <!-- <span class="icon is-small is-left"><i class="mdi mdi-account"></i></span> -->
+              <input class="input" type="text" name="reference" placeholder="Entrer la référence du produit" value="<?php if (isset($currentProduct['reference'])) echo $currentProduct['reference']; ?>" />
+
             </div>
             <div class="field">
-              <input class="input" type="text" name="category" placeholder="Entrer une catégorie de produit" />
+              <input class="input" type="text" name="category" placeholder="Entrer une catégorie de produit" value="<?php if (isset($currentProduct['category'])) echo $currentProduct['category']; ?>" />
             </div>
           </div>
         </div>
@@ -273,11 +363,11 @@ require_once('include/header.php');
           </div>
           <div class="field-body">
             <div class="field">
-              <input class="input" type="text" name="title" placeholder="Entrer le nom du produit" />
-              <!-- <span class="icon is-small is-left"><i class="mdi mdi-account"></i></span> -->
+              <input class="input" type="text" name="title" placeholder="Entrer le nom du produit" value="<?php if (isset($currentProduct['title'])) echo $currentProduct['title']; ?>" />
+
             </div>
             <div class="field">
-              <input class="input" type="text" name="color" placeholder="Entrer la couleur du produit" />
+              <input class="input" type="text" name="color" placeholder="Entrer la couleur du produit" value="<?php if (isset($currentProduct['color'])) echo $currentProduct['color']; ?>" />
             </div>
           </div>
         </div>
@@ -293,11 +383,11 @@ require_once('include/header.php');
 
                   <select name="size">
                     <option value="XS">XS</option>
-                    <option value="S">S</option>
-                    <option value="M">M</option>
-                    <option value="L">L</option>
-                    <option value="XL">XL</option>
-                    <option value="XXL">XXL</option>
+                    <option value="S" <?php if (isset($currentProduct['size'])  && $currentProduct['size'] == 'S') echo 'selected' ?>>S</option>
+                    <option value="M" <?php if (isset($currentProduct['size'])  && $currentProduct['size'] == 'M') echo 'selected' ?>>M</option>
+                    <option value="L" <?php if (isset($currentProduct['size'])  && $currentProduct['size'] == 'L') echo 'selected' ?>>L</option>
+                    <option value="XL" <?php if (isset($currentProduct['size'])  && $currentProduct['size'] == 'XL') echo 'selected' ?>>XL</option>
+                    <option value="XXL" <?php if (isset($currentProduct['size'])  && $currentProduct['size'] == 'XXL') echo 'selected' ?>>XXL</option>
                   </select>
 
                 </div>
@@ -310,8 +400,8 @@ require_once('include/header.php');
 
                   <select name="public">
                     <option value="homme">Homme</option>
-                    <option value="femme">Femme</option>
-                    <option value="mixte">Mixte</option>
+                    <option value="femme" <?php if (isset($currentProduct['public'])  && $currentProduct['public'] == 'femme') echo 'selected' ?>>Femme</option>
+                    <option value="mixte" <?php if (isset($currentProduct['public'])  && $currentProduct['public'] == 'mixte') echo 'selected' ?>>Mixte</option>
                   </select>
 
                 </div>
@@ -344,7 +434,23 @@ require_once('include/header.php');
             </div>
           </div>
         </div>
+        <input type="hidden" name="current_picture" value="<?php if (isset($currentProduct['picture'])) echo $currentProduct['picture']; ?>">
+        <?php
+        if (isset($currentProduct['picture']) && !empty($currentProduct['picture'])):
+        ?>
 
+          <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label">Photo actuelle</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <img src="<?= $currentProduct['picture'] ?>" class="picture__product" alt="<?php if (isset($currentProduct['title'])) echo $currentProduct['title']; ?>">
+              </div>
+            </div>
+          </div>
+
+        <?php endif; ?>
 
         <div class="field is-horizontal">
           <div class="field-label is-normal">
@@ -356,7 +462,7 @@ require_once('include/header.php');
                 <textarea
                   class="textarea"
                   name="description"
-                  placeholder="Entrer une description du produit"></textarea>
+                  placeholder="Entrer une description du produit"><?php if (isset($currentProduct['description'])) echo $currentProduct['description']; ?></textarea>
               </div>
             </div>
           </div>
@@ -368,10 +474,10 @@ require_once('include/header.php');
           </div>
           <div class="field-body">
             <div class="field">
-              <input class="input" type="text" name="price" placeholder="Entrer un prix produit" />
+              <input class="input" type="text" name="price" placeholder="Entrer un prix produit" value="<?php if (isset($currentProduct['price'])) echo $currentProduct['price']; ?>" />
             </div>
             <div class="field">
-              <input class="input" type="text" name="stock" placeholder="Entrer un stock produit" />
+              <input class="input" type="text" name="stock" placeholder="Entrer un stock produit" value="<?php if (isset($currentProduct['stock'])) echo $currentProduct['stock']; ?>" />
             </div>
           </div>
         </div>
@@ -426,8 +532,6 @@ require_once('include/header.php');
 <?php
 
 require_once('include/footer.php');
+unset($_SESSION['msgValidation']);
 
 ?>
-
-
-Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquam neque hic cumque id nihil aliquid eaque, porro corrupti quia quos odio perspiciatis alias aperiam ipsa quibusdam commodi pariatur molestiae maiores!

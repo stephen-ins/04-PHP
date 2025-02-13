@@ -8,6 +8,89 @@ if (!adminConnected()) {
   header('location: ' . URL . 'index.php');
 }
 
+if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
+
+  // echo '<pre>';
+  // print_r($_FILES);
+  // echo '</pre>';
+
+  // echo '<pre>';
+  // print_r($_POST);
+  // echo '</pre>';
+
+  // $_FILES est une superglobale qui permet de stocker les données d'un fichier uploadé (nom, extension, taille etc...)
+  // Si une image à bien été uploadée
+  if (!empty($_FILES['picture']['name'])) {
+
+    // Contrôle de l'extension
+    $currentExtension = [1 => 'jpg', 2 => 'jpeg', 3 => 'png', 4 => 'webp'];
+    $fileUploaded = new SplFileInfo($_FILES['picture']['name']);
+    // SplFileInfo est une classe prédéfinie en PHP qui permet de traiter les données d'un fichier uploadé, elle contient ses propres métodes (fonctions)
+
+
+    // echo '<pre>';
+    // print_r($fileUploaded);
+    // echo '</pre>';
+
+    // echo '<pre>';
+    // print_r(get_class_methods($fileUploaded));
+    // echo '</pre>';
+
+    // getExtension() est une méthode de la classe SplFileInfo qui retoune l'extension du fichier uploadé
+    $fileUploadedExtension = $fileUploaded->getExtension();
+    // echo "Format du fichier chargé :" . $fileUploadedExtension . '<br>';
+
+    // array_search() permet de rechercher une valeur dans un tableau et retourne la position d'un élément (indice) si elle est trouvée
+    // Exemple:     position            png              [jpg, jpeg, png, webp]
+    $positionExtension = array_search($fileUploadedExtension, $currentExtension);
+    // echo "Position de l'extension :" . $positionExtension . '<br>';
+
+    // Si array_search() retourne FALSE, cela signifie que l'extension du fichier uploadé n'est pas dans le tableau Array $currentExtension alors on entre dans le IF
+    if ($positionExtension === false) {
+      $errorPicture = "<small class= 'has-text-danger'>Extention non valide. Veuillez utiliser .jpg, .jpeg, .png, .webp]</small>";
+    } else {
+
+      // On concatène la référence du produit avec le nom de l'image 
+      $pictureName = $_POST['reference'] . '-' . $_FILES['picture']['name'];
+      // echo $pictureName . '<br>';
+
+      // On définit le chemin de l'image qui sera stockée en BDD
+      $pictureUrlDb = URL . "assets/images-produits/$pictureName";
+      // echo $pictureUrlDb . '<br>';
+
+      // On définit le chemin physique de l'image qui sera stockée sur le serveur où sera copié l'image
+      // /opt/lampp/htdocs/php/shop/assets/images-produits/2545CBT-p7.png
+      $pictureFolder = RACINE_SITE . "assets/images-produits/$pictureName";
+      // echo $pictureFolder;
+
+      // La fonction prédéfinie copy() permet de copier un fichier depuis un emplacement vers un autre
+      // 2 arguments : copy(chemin_source, chemin_destination)
+      //               () image accéssible dans $_FILES , dossier de destination sur le serveur)
+      copy($_FILES['picture']['tmp_name'], $pictureFolder);
+
+      // Requête SQL d'insertion pour insérer un produit en BDD
+      $data = $connect_db->prepare('INSERT INTO product (reference, category, title, color, size, description, price, stock, picture, public) VALUES (:reference, :category, :title, :color, :size, :description, :price, :stock, :picture, :public)');
+      $data->bindValue(':reference', $_POST['reference'], PDO::PARAM_STR);
+      $data->bindValue(':category', $_POST['category'], PDO::PARAM_STR);
+      $data->bindValue(':title', $_POST['title'], PDO::PARAM_STR);
+      $data->bindValue(':color', $_POST['color'], PDO::PARAM_STR);
+      $data->bindValue(':size', $_POST['size'], PDO::PARAM_STR);
+      $data->bindValue(':description', $_POST['description'], PDO::PARAM_STR);
+      $data->bindValue(':price', $_POST['price']);
+      $data->bindValue(':stock', $_POST['stock'], PDO::PARAM_INT);
+      $data->bindValue(':picture', $pictureUrlDb, PDO::PARAM_STR);
+      $data->bindValue(':public', $_POST['public'], PDO::PARAM_INT);
+      $data->execute();
+    }
+  }
+}
+
+
+
+
+
+
+
 require_once('include/header.php');
 ?>
 
@@ -165,9 +248,9 @@ require_once('include/header.php');
       </p>
     </header>
     <div class="card-content">
-      <form method="post">
 
-
+      <!-- enctype : mutlipart/formdata : permet de récupérer en php les données d'un fichier uploadé -->
+      <form method="post" enctype="multipart/form-data">
         <div class="field is-horizontal">
           <div class="field-label is-normal">
             <label class="label">Référence | Catégorie</label>
@@ -225,10 +308,10 @@ require_once('include/header.php');
               <div class="control">
                 <div class="select is-fullwidth">
 
-                  <select name="size">
-                    <option value="HOMME">Homme</option>
-                    <option value="FEMME">Femme</option>
-                    <option value="MIXTE">Mixte</option>
+                  <select name="public">
+                    <option value="homme">Homme</option>
+                    <option value="femme">Femme</option>
+                    <option value="mixte">Mixte</option>
                   </select>
 
                 </div>
@@ -245,13 +328,9 @@ require_once('include/header.php');
           </div>
           <div class="field-body">
             <div class="field">
-
-
-
-
               <div class="file has-name">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="resume" />
+                  <input class="file-input" type="file" name="picture" />
                   <span class="file-cta">
                     <!-- <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -261,81 +340,46 @@ require_once('include/header.php');
                   <span class="file-name"> Parcourir </span>
                 </label>
               </div>
-
-
-
-
+              <?php if (isset($errorPicture)) echo $errorPicture; ?>
             </div>
           </div>
         </div>
-
-
-
-
-
-
-
-
-        <div class="field is-horizontal">
-          <div class="field-label"></div>
-          <div class="field-body">
-            <div class="field is-expanded">
-              <div class="field has-addons">
-                <p class="control">
-                  <a class="button is-static">+33</a>
-                </p>
-                <p class="control is-expanded">
-                  <input
-                    class="input"
-                    type="tel"
-                    placeholder="Your phone number" />
-                </p>
-              </div>
-              <p class="help">Ne pas saisir le 1er (0)</p>
-            </div>
-          </div>
-        </div>
-
-
-
-
-
-
-
 
 
         <div class="field is-horizontal">
           <div class="field-label is-normal">
-            <label class="label">Subject</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <input
-                  class="input is-danger"
-                  type="text"
-                  placeholder="e.g. Partnership opportunity" />
-              </div>
-              <p class="help is-danger">This field is required</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">Question</label>
+            <label class="label">Description</label>
           </div>
           <div class="field-body">
             <div class="field">
               <div class="control">
                 <textarea
                   class="textarea"
-                  placeholder="Explain how we can help you"></textarea>
+                  name="description"
+                  placeholder="Entrer une description du produit"></textarea>
               </div>
             </div>
           </div>
         </div>
+
         <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Prix | Stock</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <input class="input" type="text" name="price" placeholder="Entrer un prix produit" />
+            </div>
+            <div class="field">
+              <input class="input" type="text" name="stock" placeholder="Entrer un stock produit" />
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- LE SWITCH POUR ACTIVER/DESACTIVER LE PRODUIT  -->
+        <!-- <div class="field is-horizontal">
           <div class="field-label">
             <label class="label">Switch</label>
           </div>
@@ -347,7 +391,9 @@ require_once('include/header.php');
               </label>
             </div>
           </div>
-        </div>
+        </div> -->
+
+
         <hr />
         <div class="field is-horizontal">
           <div class="field-label">
@@ -357,8 +403,8 @@ require_once('include/header.php');
             <div class="field">
               <div class="field is-grouped">
                 <div class="control">
-                  <button type="submit" class="button is-primary">
-                    <span>Submit</span>
+                  <button type="submit" name="submit" class="button is-primary">
+                    <span>Enregistrer</span>
                   </button>
                 </div>
                 <div class="control">
@@ -382,3 +428,6 @@ require_once('include/header.php');
 require_once('include/footer.php');
 
 ?>
+
+
+Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquam neque hic cumque id nihil aliquid eaque, porro corrupti quia quos odio perspiciatis alias aperiam ipsa quibusdam commodi pariatur molestiae maiores!

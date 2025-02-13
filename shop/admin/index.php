@@ -9,6 +9,7 @@ if (!adminConnected()) {
 }
 
 require_once('include/header.php');
+
 ?>
 
 

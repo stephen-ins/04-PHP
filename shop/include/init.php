@@ -21,7 +21,7 @@ session_start();
 // print_r($_SERVER);
 // echo '</pre>';
 
-define('RACINE_SITE', $_SERVER['DOCUMENT_ROOT'] . '/');
+define('RACINE_SITE', $_SERVER['DOCUMENT_ROOT'] . '/php/shop/');
 
 // echo '<pre>';
 // print_r(RACINE_SITE);

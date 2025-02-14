@@ -1,12 +1,31 @@
 <?php
-
 require_once('../include/init.php');
+$_SESSION['msg'] = false;
+
+// echo '<pre>';
+// print_r($_POST);
+// echo '</pre>';
 
 // Redirection vers la page index si l'user n'est pas connecté main non admin.
 if (!adminConnected()) {
   //                   http://localhost/php/shop/index.php
   header('location: ' . URL . 'index.php');
 }
+
+// Suppression du produit
+if (isset($_GET['action']) && $_GET['action'] == 'delete') {
+
+  $data = $connect_db->prepare('DELETE FROM product WHERE id_product = :id');
+  $data->bindValue(':id', $_GET['id'], PDO::PARAM_INT);
+  $data->execute();
+
+  $_SESSION['msgValidation'] = "Le produit a été supprimé avec succès";
+  $_SESSION['msg'] = true;
+
+  header('location: gestion_boutique.php');
+}
+
+
 
 if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -81,10 +100,14 @@ if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
   if (isset($_GET['action']) && $_GET['action'] == 'update') {
     $data = $connect_db->prepare('UPDATE product SET reference = :reference, category = :category, title = :title, color = :color, size = :size, description = :description, price = :price, stock = :stock, picture = :picture, public = :public WHERE id_product = :id');
     $data->bindValue(':id', $_GET['id'], PDO::PARAM_INT);
+
+    $_SESSION['msgValidation'] = "Les modifications du produit ont été effectuées avec succès";
   } else {
     $data = $connect_db->prepare('INSERT INTO product (reference, category, title, color, size, description, price, stock, picture, public) VALUES (:reference, :category, :title, :color, :size, :description, :price, :stock, :picture, :public)');
-  }
 
+    $_SESSION['msgValidation'] = "L'enregistrement du produit a été effectué avec succès";
+  }
+  $_SESSION['msg'] = true;
 
   // Requête SQL d'insertion pour insérer un produit en BDD
   $data->bindValue(':reference', $_POST['reference'], PDO::PARAM_STR);
@@ -96,10 +119,10 @@ if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
   $data->bindValue(':price', $_POST['price']);
   $data->bindValue(':stock', $_POST['stock'], PDO::PARAM_INT);
   $data->bindValue(':picture', $pictureUrlDb, PDO::PARAM_STR);
-  $data->bindValue(':public', $_POST['public'], PDO::PARAM_INT);
+  $data->bindValue(':public', $_POST['public'], PDO::PARAM_STR);
   $data->execute();
 
-  $_SESSION['msgValidation'] = "L'enregistrement du produit a été effectué avec succès";
+  header('location: gestion_boutique.php');
 }
 
 $data = $connect_db->query('SELECT * FROM product');
@@ -126,7 +149,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'update') {
   // print_r($currentProduct);
   // echo '</pre>';
 }
-
 
 
 require_once('include/header.php');
@@ -222,6 +244,8 @@ require_once('include/header.php');
               </tr>
             </thead>
             <tbody>
+
+
 
               <?php foreach ($products as $arrayProduct): ?>
 
@@ -532,6 +556,7 @@ require_once('include/header.php');
 <?php
 
 require_once('include/footer.php');
-unset($_SESSION['msgValidation']);
-
+if ($_SESSION['msg'] == false) {
+  unset($_SESSION['msgValidation']);
+}
 ?>

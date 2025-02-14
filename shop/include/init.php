@@ -44,10 +44,10 @@ $content = '';
 // --- FAILLES XSS
 
 foreach ($_POST as $key => $value) {
-  $_POST[$key] = htmlentities(addslashes(trim($value)));
+  $_POST[$key] = htmlspecialchars(addslashes(trim($value)));
 }
 foreach ($_GET as $key => $value) {
-  $_GET[$key] = htmlentities(addslashes(trim($value)));
+  $_GET[$key] = htmlspecialchars(addslashes(trim($value)));
 }
 // trim(), fonction prédéfinie de PHP, permet de supprimer les espaces en début et fin de chaîne de caractères
 

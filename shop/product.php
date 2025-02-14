@@ -2,6 +2,38 @@
 
 require_once 'include/init.php';
 
+/*
+Exo : Afficher les produits stockées en BDD
+1- Sélectionner l'ensemble de la table product
+2- Exécuter une méthode (fetch / fetchAll) pour rendre le résultat exploitable sous forme d'ARRAY
+3- Traitement pour l'affichage (boucle)
+4- Prévoir un lien qui redirige vers la page fiche_produit.php pour chaque produit, avec l'envoi de l'id_product dans l'URL
+*/
+
+// Sélection de la table product:
+$selectAllProduct = $connect_db->query("SELECT * FROM product");
+
+// echo '<pre>';
+// print_r($selectAllProduct);
+// echo '</pre>';
+
+// 2- Exécuter une méthode (fetch / fetchAll) pour rendre le résultat exploitable sous forme d'ARRAY
+
+$dataProducts = $selectAllProduct->fetchAll(PDO::FETCH_ASSOC);
+
+// echo '<pre>';
+// print_r($dataProducts);
+// echo '<pre>';
+
+// 3- Traitement affiche par boucle
+// 4- Lien de redirection vers la page fiche_product.php pour chaque produit
+
+
+
+
+
+
+
 
 require_once 'include/header.php'; ?>
 
@@ -26,26 +58,42 @@ require_once 'include/header.php'; ?>
     <div class="heading_container heading_center">
       <h2>Nos <span>produits</span></h2>
     </div>
+
+    <!-- DEBUT DE LA DIV POUR INSERER LES ARTICLES -->
+
+
     <div class="row">
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="box">
-          <div class="option_container">
-            <div class="options">
-              <a href="" class="option1"> Chemise homme </a>
-              <a href="" class="option2">Acheter maintenant</a>
+
+      <?php foreach ($dataProducts as $products): ?>
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="box">
+            <div class="option_container">
+              <div class="options">
+                <a href="fiche_produit.php?id_product=<?php echo $products['id_product']; ?>" class="option1">Voir plus</a>
+                <a href="fiche_produit.php?id_product=<?php echo $products['id_product']; ?> " class=" option2">Acheter maintenant</a>
+              </div>
+            </div>
+            <div class="img-box">
+              <img src=<?php echo $products['picture']; ?> alt="" />
+            </div>
+            <div class="detail-box">
+              <h5><?php echo $products['title']; ?></h5>
+              <h6><?php echo $products['price'] . ' €'; ?></h6>
             </div>
           </div>
-          <div class="img-box">
-            <img src="assets/images-famma/p1.png" alt="" />
-          </div>
-          <div class="detail-box">
-            <h5>Chemise homme</h5>
-            <h6>75€</h6>
-          </div>
         </div>
-      </div>
+
+
+        <?php endforeach; ?>;
+
 
     </div>
+
+
+    <!-- LIMITE D'INSERTION -->
+
+
+
     <div class="btn-box">
       <a href=""> Voir tous les produits </a>
     </div>

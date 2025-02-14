@@ -1,4 +1,47 @@
-<?php require_once 'include/header.php'; ?>
+<?php
+
+require_once 'include/init.php';
+
+
+// $selectAllProduct = $connect_db->query("SELECT * FROM product");
+
+// echo '<pre>';
+// print_r($selectAllProduct);
+// echo '</pre>';
+
+// $dataProducts = $selectAllProduct->fetchAll(PDO::FETCH_ASSOC);
+
+// echo '<pre>';
+// print_r($dataProducts);
+// echo '<pre>';
+
+if (isset($_GET['id_product'])) {
+  $id_product = $_GET['id_product'];
+
+  echo '<pre>';
+  print_r("ID présent dans l'url actuellement: " . $id_product);
+  echo '<pre>';
+
+  // Sélectionner les détail du produit
+  $query = $connect_db->prepare("SELECT * FROM product WHERE id_product = $id_product");
+  $query->bindValue(':id_product', $_GET['id_product'], PDO::PARAM_STR);
+  $query->execute();
+
+  $productDetail = $query->fetch(PDO::FETCH_ASSOC);
+
+  // echo '<pre>';
+  // print_r($productDetail);
+  // echo '<pre>';
+}
+
+
+
+
+
+
+require_once 'include/header.php';
+
+?>
 
 
 <!-- inner page section -->
@@ -30,8 +73,9 @@
       </div>
       <div class="col-sm-6 col-md-6 col-lg-6">
         <div class="detail-box">
-          <h5>Men's Shirt</h5>
-          <h6>$75</h6>
+          <h5>titre</h5>
+          <h6>prix</h6>
+          <p>description</p>
         </div>
       </div>
     </div>

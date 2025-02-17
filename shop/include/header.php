@@ -13,6 +13,7 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="shortcut icon" href="assets/images-famma/favicon.png" type="" />
   <title>Famms - Fashion HTML Template</title>
   <!-- bootstrap core css -->
@@ -29,6 +30,11 @@
 </head>
 
 <body>
+  <!-- <?php
+        echo '<pre>';
+        print_r($_SERVER);
+        echo '</pre>';
+        ?> -->
   <div class="hero_area">
     <!-- header section strats -->
     <header class="header_section">
@@ -47,22 +53,22 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav">
-              <li class="nav-item active">
+              <li class="nav-item <?php activeLink('/php/shop/index.php') ?>">
                 <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item <?php activeLink('/php/shop/product.php') ?>">
                 <a class="nav-link" href="product.php">Boutique</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item <?php activeLink('/php/shop/contact.php') ?>">
                 <a class="nav-link" href="contact.php">Contact</a>
               </li>
 
               <?php if (!userConnected()): // ON entre dans le IF dans le cas où l'indice 'user' n'est pas définit dans la session, donc l'user n'est pas authentifié 
               ?>
-                <li class="nav-item">
+                <li class="nav-item <?php activeLink('/php/shop/connexion.php') ?>">
                   <a class="nav-link" href="connexion.php">Identifiez-vous</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item <?php activeLink('/php/shop/inscription.php') ?>">
                   <a class="nav-link" href="inscription.php">Inscription</a>
                 </li>
               <?php endif; ?>
@@ -70,7 +76,7 @@
 
               <?php if (userConnected()): // ON entre dans le IF dans le cas où l'indice 'user' n'est pas définit dans la session, donc l'user est authentifié 
               ?>
-                <li class="nav-item">
+                <li class="nav-item <?php activeLink('/php/shop/profil.php') ?>">
                   <a class="nav-link" href="profil.php">Mon compte</a>
                 </li>
                 <li class="nav-item">
@@ -105,8 +111,8 @@
 
 
 
-              <li class="nav-item">
-                <a class="nav-link" href="#">
+              <li class="nav-item d-flex align-items-start <?php activeLink('/php/shop/panier.php') ?>">
+                <a class="nav-link" href="panier.php">
                   <svg
                     version="1.1"
                     id="Capa_1"
@@ -157,12 +163,24 @@
                     <g></g>
                   </svg>
                 </a>
+
+                <!-- Exo : Faire la somme de produit dans le panier de la session -->
+                <?php $nbProduct = 0;
+                if (isset($_SESSION['cart'])):
+                  $nbProduct = array_sum($_SESSION['cart']['quantity']);
+                ?>
+
+                  <!-- array_sum() : fonction prédéfinie qui calcul la somme des éléments d'un tableau Array -->
+                  <span class="badge bg-success text-white mt-1"><?= $nbProduct ?></span>
+
+                <?php endif; ?>
+
               </li>
-              <form class="form-inline">
+              <!-- <form class="form-inline">
                 <button class="btn my-2 my-sm-0 nav_search-btn" type="submit">
                   <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
-              </form>
+              </form> -->
             </ul>
           </div>
         </nav>

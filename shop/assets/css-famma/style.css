@@ -1133,6 +1133,10 @@ form input[type="submit"]:focus {
   background: #f7444e;
 }
 
+.picture__product {
+  width: 75px;
+}
+
 
 
 

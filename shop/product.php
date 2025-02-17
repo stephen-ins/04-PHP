@@ -12,6 +12,8 @@ Exo : Afficher les produits stockées en BDD
 
 // Sélection de la table product:
 $selectAllProduct = $connect_db->query("SELECT * FROM product");
+// ici le nécessaire pour afficher les produits
+// $selectAllProduct= $connect_db->query("SELECT id product, title, price, picture FROM product");
 
 // echo '<pre>';
 // print_r($selectAllProduct);
@@ -27,11 +29,6 @@ $dataProducts = $selectAllProduct->fetchAll(PDO::FETCH_ASSOC);
 
 // 3- Traitement affiche par boucle
 // 4- Lien de redirection vers la page fiche_product.php pour chaque produit
-
-
-
-
-
 
 
 
@@ -69,8 +66,8 @@ require_once 'include/header.php'; ?>
           <div class="box">
             <div class="option_container">
               <div class="options">
-                <a href="fiche_produit.php?id_product=<?php echo $products['id_product']; ?>" class="option1">Voir plus</a>
-                <a href="fiche_produit.php?id_product=<?php echo $products['id_product']; ?> " class=" option2">Acheter maintenant</a>
+                <a href="fiche_produit.php?id=<?php echo $products['id_product']; ?>" class="option1">Voir plus</a>
+                <a href="fiche_produit.php?id=<?php echo $products['id_product']; ?> " class=" option2">Acheter maintenant</a>
               </div>
             </div>
             <div class="img-box">

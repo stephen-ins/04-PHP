@@ -129,7 +129,7 @@ unset($_SESSION['msgRegisterValidate']);
 
 <div class="cpy_">
   <p>
-    © 2025 Tous droits réservés par Grégory LACROIX
+    © 2025 - Stephen Ins - Tous droits réservés
   </p>
 </div>
 <!-- footer section -->

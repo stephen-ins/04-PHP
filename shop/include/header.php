@@ -77,7 +77,7 @@
               <?php if (userConnected()): // ON entre dans le IF dans le cas où l'indice 'user' n'est pas définit dans la session, donc l'user est authentifié 
               ?>
                 <li class="nav-item <?php activeLink('/php/shop/profil.php') ?>">
-                  <a class="nav-link" href="profil.php">Mon compte</a>
+                  <a class="nav-link" href="profil.php">Compte</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="connexion.php?action=logout">Déconnexion</a>

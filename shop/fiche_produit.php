@@ -103,20 +103,25 @@ require_once 'include/header.php';
 
 
 
-
           <?php endif; ?>
 
         </div>
       </div>
     </div>
     <div class="btn-box">
-      <a href=""> Voir tout les produits </a>
+      <a href="product.php"> Voir tout les produits </a>
     </div>
   </div>
 </section>
 <!-- end product section -->
 
 <?php require_once 'include/footer.php'; ?>
+
+<div class="cpy_">
+  <p>
+    © 2025 - Stephen Ins - Tous droits réservés
+  </p>
+</div>
 
 <!-- jQery -->
 <script src="assets/js-famma/jquery-3.4.1.min.js"></script>

@@ -6,7 +6,45 @@ require_once 'include/init.php';
 // print_r($_SESSION);
 // echo '</pre>';
 
+// Rajouter 3 cards des 3 derniers produits ajoutés à la base de données
 
+// 1- Requête SQL pour récupérer les 3 produits les plus commandés par les clients, en comptant le nombre de commandes par product_id
+$lastProductPopularOrder = $connect_db->query("SELECT product_id, COUNT(*) as order_count 
+  FROM order_details 
+  GROUP BY product_id 
+  ORDER BY order_count DESC 
+  LIMIT 3
+");
+
+// 2- Exécuter la requête et récupérer les données
+$popularProducts = $lastProductPopularOrder->fetchAll(PDO::FETCH_ASSOC);
+
+// 3- Afficher les données
+// echo '<pre>';
+// print_r($popularProducts);
+// echo '</pre>';
+
+
+// 2éme métode avec inner join :
+// $lastProductPopularOrder2 = $connect_db->query("SELECT product.picture, product.title, product.price, product.id_product
+//   FROM product INNER JOIN order_details
+//   ON product.id_product = order_details.product_id
+//   ORDER BY order_details.quantity
+//   DESC LIMIT 3
+// ");
+
+// $test = $lastProductPopularOrder2->fetchAll(PDO::FETCH_ASSOC);
+// echo '<pre>';
+// print_r($test);
+// echo '</pre>';
+
+/*
+  SELECT product.picture, product.title, product.price, product.id_product
+  FROM product INNER JOIN order_details
+  ON product.id_product = order_details.product_id
+  ORDER BY order_details.quantity
+  DESC LIMIT 3
+*/
 
 
 require_once 'include/header.php';
@@ -42,7 +80,7 @@ require_once 'include/header.php';
                   impedit sequi.
                 </p>
                 <div class="btn-box">
-                  <a href="" class="btn1"> Achetez maintenant</a>
+                  <a href="product.php" class="btn1"> Achetez maintenant</a>
                 </div>
               </div>
             </div>
@@ -67,7 +105,7 @@ require_once 'include/header.php';
                   impedit sequi.
                 </p>
                 <div class="btn-box">
-                  <a href="" class="btn1">Achetez maintenant</a>
+                  <a href="product.php" class="btn1">Achetez maintenant</a>
                 </div>
               </div>
             </div>
@@ -92,7 +130,7 @@ require_once 'include/header.php';
                   impedit sequi.
                 </p>
                 <div class="btn-box">
-                  <a href="" class="btn1">Achetez maintenant</a>
+                  <a href="product.php" class="btn1">Achetez maintenant</a>
                 </div>
               </div>
             </div>
@@ -379,7 +417,7 @@ require_once 'include/header.php';
             Tenetur commodi, nisi rem vel, ea eaque ab ipsa, autem similique
             ex unde!
           </p>
-          <a href="">Achetez maintenant</a>
+          <a href="product.php">Achetez maintenant</a>
         </div>
       </div>
     </div>
@@ -390,30 +428,47 @@ require_once 'include/header.php';
 <!-- product section -->
 <section class="product_section layout_padding">
   <div class="container">
+
     <div class="heading_container heading_center">
-      <h2>Nos <span>produits</span></h2>
+      <h2>Nos <span>produits du moment</span></h2>
     </div>
+
     <div class="row">
-      <div class="col-sm-6 col-md-4 col-lg-4">
-        <div class="box">
-          <div class="option_container">
-            <div class="options">
-              <a href="" class="option1"> Chemise homme </a>
-              <a href="" class="option2"> Acheter maintenant </a>
+
+      <?php foreach ($popularProducts as $product) :
+        $data = $connect_db->query("SELECT * FROM product WHERE id_product = " . $product['product_id']);
+        $product = $data->fetch(PDO::FETCH_ASSOC);
+      ?>
+
+        <div class="col-sm-6 col-md-4 col-lg-4">
+          <div class="box">
+            <div class="option_container">
+              <div class="options">
+
+                <a href="fiche_produit.php?id=<?php echo $product['id_product']; ?>" class="option1">Voir plus</a>
+                <a href="fiche_produit.php?id=<?php echo $product['id_product']; ?>" class="option2">Acheter maintenant</a>
+
+              </div>
+            </div>
+            <div class="img-box">
+              <img src="<?= $product['picture'] ?>" alt="" />
+            </div>
+            <div class="detail-box">
+              <h5><?= $product['title']  ?></h5>
+              <h6><?= $product['price'] ?> €</h6>
             </div>
           </div>
-          <div class="img-box">
-            <img src="assets/images-famma/p1.png" alt="" />
-          </div>
-          <div class="detail-box">
-            <h5>Chemise homme</h5>
-            <h6>75€</h6>
-          </div>
         </div>
-      </div>
+
+      <?php endforeach; ?>
+
     </div>
+
+
+
+
     <div class="btn-box">
-      <a href="">Voir tous les produits</a>
+      <a href="product.php">Visiter notre boutique</a>
     </div>
   </div>
 </section>
@@ -546,7 +601,7 @@ require_once 'include/header.php';
 <?php require_once 'include/footer.php'; ?>
 <div class="cpy_">
   <p>
-    © 2025 Tous droits réservés par Grégory LACROIX
+    © 2025 - Stephen Ins - Tous droits réservés
   </p>
 </div>
 <!-- jQery -->

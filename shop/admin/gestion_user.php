@@ -9,6 +9,37 @@ if (!adminConnected()) {
 }
 
 
+// Insérer les clients (user) inscrits dans la BDD, avec leur lastname, firstname , email, city, zipcode, et date d'inscription
+$data = $connect_db->query("SELECT * FROM user");
+// echo '<pre>';
+// print_r($data);
+// echo '</pre>';
+
+// Recherche des client par rapport au 'roles' -> user
+$dataUsers = $connect_db->query("SELECT * FROM user WHERE roles = 'user'");
+$dataUsers = $dataUsers->fetchAll(PDO::FETCH_ASSOC);
+echo '<pre>';
+print_r($dataUsers);
+echo '</pre>';
+
+// Recherche des client par rapport au 'roles' -> admin
+$dataAdmin = $connect_db->query("SELECT * FROM user WHERE roles = 'admin'");
+$dataAdmin = $dataAdmin->fetchAll(PDO::FETCH_ASSOC);
+echo '<pre>';
+print_r($dataAdmin);
+echo '</pre>';
+
+
+
+
+
+
+
+
+
+
+
+
 require_once('include/header.php');
 
 ?>
@@ -46,7 +77,7 @@ require_once('include/header.php');
 <section class="section is-main-section">
   <div class="notification is-primary">
     <button class="delete"></button>
-    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+    Le client a été retiré avec succès.
   </div>
   <div class="card has-table">
     <header class="card-header">
@@ -72,61 +103,57 @@ require_once('include/header.php');
                   </label>
                 </th>
                 <th></th>
-                <th>Name</th>
-                <th>Company</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Email</th>
                 <th>City</th>
-                <th>Progress</th>
                 <th>Created</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="is-checkbox-cell">
-                  <label class="b-checkbox checkbox">
-                    <input type="checkbox" value="false" />
-                    <span class="check"></span>
-                  </label>
-                </td>
-                <td class="is-image-cell">
-                  <div class="image">
-                    <img
-                      src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg"
-                      class="is-rounded" />
-                  </div>
-                </td>
-                <td data-label="Name">Rebecca Bauch</td>
-                <td data-label="Company">Daugherty-Daniel</td>
-                <td data-label="City">South Cory</td>
-                <td data-label="Progress" class="is-progress-cell">
-                  <progress
-                    max="100"
-                    class="progress is-small is-primary"
-                    value="79">
-                    79
-                  </progress>
-                </td>
-                <td data-label="Created">
-                  <small
-                    class="has-text-grey is-abbr-like"
-                    title="Oct 25, 2020">Oct 25, 2020</small>
-                </td>
-                <td class="is-actions-cell">
-                  <div class="buttons is-right">
-                    <button
-                      class="button is-small is-primary"
-                      type="button">
-                      <span class="icon"><i class="mdi mdi-eye"></i></span>
-                    </button>
-                    <button
-                      class="button is-small is-danger jb-modal"
-                      data-target="sample-modal"
-                      type="button">
-                      <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              <!-- Par tour de boucle, insérer les 'roles' user dans ce tableau -->
+              <?php foreach ($dataUsers as $user) : ?>
+                <tr>
+                  <td class="is-checkbox-cell">
+                    <label class="b-checkbox checkbox">
+                      <input type="checkbox" value="false" />
+                      <span class="check"></span>
+                    </label>
+                  </td>
+                  <td class="is-image-cell">
+                    <div class="image">
+                      <img
+                        src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg"
+                        class="is-rounded" />
+                    </div>
+                  </td>
+
+                  <td data-label="Firstname"><?php echo $user['firstName']; ?></td>
+                  <td data-label="Lastname"><?php echo $user['lastName']; ?></td>
+                  <td data-label="Email"><?php echo $user['email']; ?></td>
+                  <td data-label="City"><?php echo $user['city']; ?></td>
+                  <td data-label="Created"><?php echo $user['firstname']; ?></td>
+
+                  </td>
+                  <td class="is-actions-cell">
+                    <div class="buttons is-right">
+                      <button
+                        class="button is-small is-primary"
+                        type="button">
+                        <span class="icon"><i class="mdi mdi-eye"></i></span>
+                      </button>
+                      <button
+                        class="button is-small is-danger jb-modal"
+                        data-target="sample-modal"
+                        type="button">
+                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+
             </tbody>
           </table>
         </div>
@@ -180,61 +207,60 @@ require_once('include/header.php');
                   </label>
                 </th>
                 <th></th>
-                <th>Name</th>
-                <th>Company</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Email</th>
                 <th>City</th>
-                <th>Progress</th>
                 <th>Created</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="is-checkbox-cell">
-                  <label class="b-checkbox checkbox">
-                    <input type="checkbox" value="false" />
-                    <span class="check"></span>
-                  </label>
-                </td>
-                <td class="is-image-cell">
-                  <div class="image">
-                    <img
-                      src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg"
-                      class="is-rounded" />
-                  </div>
-                </td>
-                <td data-label="Name">Rebecca Bauch</td>
-                <td data-label="Company">Daugherty-Daniel</td>
-                <td data-label="City">South Cory</td>
-                <td data-label="Progress" class="is-progress-cell">
-                  <progress
-                    max="100"
-                    class="progress is-small is-primary"
-                    value="79">
-                    79
-                  </progress>
-                </td>
-                <td data-label="Created">
-                  <small
-                    class="has-text-grey is-abbr-like"
-                    title="Oct 25, 2020">Oct 25, 2020</small>
-                </td>
-                <td class="is-actions-cell">
-                  <div class="buttons is-right">
-                    <button
-                      class="button is-small is-primary"
-                      type="button">
-                      <span class="icon"><i class="mdi mdi-eye"></i></span>
-                    </button>
-                    <button
-                      class="button is-small is-danger jb-modal"
-                      data-target="sample-modal"
-                      type="button">
-                      <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              <!-- Par tour de boucle, insérer les 'roles' admin dans ce tableau -->
+              <?php foreach ($dataAdmin as $admin) : ?>
+                <tr>
+                  <td class="is-checkbox-cell">
+                    <label class="b-checkbox checkbox">
+                      <input type="checkbox" value="false" />
+                      <span class="check"></span>
+                    </label>
+                  </td>
+                  <td class="is-image-cell">
+                    <div class="image">
+                      <img
+                        src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg"
+                        class="is-rounded" />
+                    </div>
+                  </td>
+
+                  </td>
+
+                  <td data-label="Firstname"><?php echo $admin['firstName']; ?></td>
+                  <td data-label="Lastname"><?php echo $admin['lastName']; ?></td>
+                  <td data-label="Email"><?php echo $admin['email']; ?></td>
+                  <td data-label="City"><?php echo $admin['city']; ?></td>
+                  <td data-label="Created"><?php echo $admin['']; ?></td>
+
+                  </td>
+
+                  <td class="is-actions-cell">
+                    <div class="buttons is-right">
+                      <button
+                        class="button is-small is-primary"
+                        type="button">
+                        <span class="icon"><i class="mdi mdi-eye"></i></span>
+                      </button>
+                      <button
+                        class="button is-small is-danger jb-modal"
+                        data-target="sample-modal"
+                        type="button">
+                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+
             </tbody>
           </table>
         </div>

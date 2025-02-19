@@ -57,7 +57,10 @@ require_once 'include/header.php'; ?>
               <ul class="list-group list-group-flush">
                 <li class="list-group-item">Prénom :</li>
                 <li class="list-group-item">Nom :</li>
+                <li class="list-group-item">Sexe :</li>
+                <li class="list-group-item">Création du compte :</li>
                 <li class="list-group-item">Adresse email :</li>
+                <li class="list-group-item">Téléphone :</li>
                 <li class="list-group-item">Adresse postale :</li>
                 <li class="list-group-item">Code postale :</li>
                 <li class="list-group-item">Ville :</li>
@@ -67,7 +70,10 @@ require_once 'include/header.php'; ?>
               <ul class="list-group list-group-flush">
                 <li class="list-group-item"><strong><?php echo htmlspecialchars($user['firstName']); ?></strong></li>
                 <li class="list-group-item"><strong><?php echo htmlspecialchars($user['lastName']); ?></strong></li>
+                <li class="list-group-item"><strong><?php echo htmlspecialchars($user['gender']); ?></strong></li>
+                <li class="list-group-item"><strong><?php echo htmlspecialchars($user['created']); ?></strong></li>
                 <li class="list-group-item"><strong><?php echo htmlspecialchars($user['email']); ?></strong></li>
+                <li class="list-group-item"><strong><?php echo htmlspecialchars($user['phone']); ?></strong></li>
                 <li class="list-group-item"><strong><?php echo htmlspecialchars($user['address']); ?></strong></li>
                 <li class="list-group-item"><strong><?php echo htmlspecialchars($user['zipcode']); ?></strong></li>
                 <li class="list-group-item"><strong><?php echo htmlspecialchars($user['city']); ?></strong></li>

@@ -18,23 +18,23 @@ $data = $connect_db->query("SELECT * FROM user");
 // Recherche des client par rapport au 'roles' -> user
 $dataUsers = $connect_db->query("SELECT * FROM user WHERE roles = 'user'");
 $dataUsers = $dataUsers->fetchAll(PDO::FETCH_ASSOC);
-echo '<pre>';
-print_r($dataUsers);
-echo '</pre>';
+// echo '<pre>';
+// print_r($dataUsers);
+// echo '</pre>';
 
 // Recherche des client par rapport au 'roles' -> admin
 $dataAdmin = $connect_db->query("SELECT * FROM user WHERE roles = 'admin'");
 $dataAdmin = $dataAdmin->fetchAll(PDO::FETCH_ASSOC);
-echo '<pre>';
-print_r($dataAdmin);
-echo '</pre>';
+// echo '<pre>';
+// print_r($dataAdmin);
+// echo '</pre>';
 
+// Commande SQL pour changer le format de la date
+$dataUsers = $connect_db->query("SELECT *, DATE_FORMAT(created, '%d/%m/%Y') AS created FROM user WHERE roles = 'user'");
+$dataUsers = $dataUsers->fetchAll(PDO::FETCH_ASSOC);
 
-
-
-
-
-
+$dataAdmin = $connect_db->query("SELECT *, DATE_FORMAT(created, '%d/%m/%Y') AS created FROM user WHERE roles = 'admin'");
+$dataAdmin = $dataAdmin->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -97,17 +97,15 @@ require_once('include/header.php');
             <thead>
               <tr>
                 <th class="is-checkbox-cell">
-                  <label class="b-checkbox checkbox">
-                    <input type="checkbox" value="false" />
-                    <span class="check"></span>
-                  </label>
+
                 </th>
-                <th></th>
+
                 <th>Firstname</th>
                 <th>Lastname</th>
                 <th>Email</th>
+                <th>Phone</th>
                 <th>City</th>
-                <th>Created</th>
+                <th>Account created</th>
                 <th></th>
               </tr>
             </thead>
@@ -115,25 +113,21 @@ require_once('include/header.php');
               <!-- Par tour de boucle, insérer les 'roles' user dans ce tableau -->
               <?php foreach ($dataUsers as $user) : ?>
                 <tr>
-                  <td class="is-checkbox-cell">
-                    <label class="b-checkbox checkbox">
-                      <input type="checkbox" value="false" />
-                      <span class="check"></span>
-                    </label>
-                  </td>
+
                   <td class="is-image-cell">
                     <div class="image">
                       <img
-                        src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg"
-                        class="is-rounded" />
+                        src="<?php echo ($user['gender'] == 'female') ? '../assets/images-famma/portrait_femme.jpg' : '../assets/images-famma/portrait_homme.jpg'; ?>"
+                        class="" />
                     </div>
-                  </td>
+
 
                   <td data-label="Firstname"><?php echo $user['firstName']; ?></td>
                   <td data-label="Lastname"><?php echo $user['lastName']; ?></td>
                   <td data-label="Email"><?php echo $user['email']; ?></td>
+                  <td data-label="Email"><?php echo $user['phone']; ?></td>
                   <td data-label="City"><?php echo $user['city']; ?></td>
-                  <td data-label="Created"><?php echo $user['firstname']; ?></td>
+                  <td data-label="Created"><?php echo $user['created']; ?></td>
 
                   </td>
                   <td class="is-actions-cell">
@@ -201,15 +195,11 @@ require_once('include/header.php');
             <thead>
               <tr>
                 <th class="is-checkbox-cell">
-                  <label class="b-checkbox checkbox">
-                    <input type="checkbox" value="false" />
-                    <span class="check"></span>
-                  </label>
                 </th>
-                <th></th>
                 <th>Firstname</th>
                 <th>Lastname</th>
                 <th>Email</th>
+                <th>Phone</th>
                 <th>City</th>
                 <th>Created</th>
                 <th></th>
@@ -219,29 +209,23 @@ require_once('include/header.php');
               <!-- Par tour de boucle, insérer les 'roles' admin dans ce tableau -->
               <?php foreach ($dataAdmin as $admin) : ?>
                 <tr>
-                  <td class="is-checkbox-cell">
-                    <label class="b-checkbox checkbox">
-                      <input type="checkbox" value="false" />
-                      <span class="check"></span>
-                    </label>
-                  </td>
+
                   <td class="is-image-cell">
                     <div class="image">
                       <img
-                        src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg"
-                        class="is-rounded" />
+                        src="<?php echo ($user['gender'] == 'female') ? '../assets/images-famma/portrait_femme.jpg' : '../assets/images-famma/portrait_homme.jpg'; ?>"
+                        class="" />
                     </div>
-                  </td>
-
                   </td>
 
                   <td data-label="Firstname"><?php echo $admin['firstName']; ?></td>
                   <td data-label="Lastname"><?php echo $admin['lastName']; ?></td>
                   <td data-label="Email"><?php echo $admin['email']; ?></td>
+                  <td data-label="Email"><?php echo $admin['phone']; ?></td>
                   <td data-label="City"><?php echo $admin['city']; ?></td>
-                  <td data-label="Created"><?php echo $admin['']; ?></td>
+                  <td data-label="Created"><?php echo $admin['created']; ?></td>
 
-                  </td>
+
 
                   <td class="is-actions-cell">
                     <div class="buttons is-right">

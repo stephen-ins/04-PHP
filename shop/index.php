@@ -430,7 +430,7 @@ require_once 'include/header.php';
   <div class="container">
 
     <div class="heading_container heading_center">
-      <h2>Nos <span>produits du moment</span></h2>
+      <h2>Nos <span>meilleurs ventes</span></h2>
     </div>
 
     <div class="row">

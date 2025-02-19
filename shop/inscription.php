@@ -50,6 +50,12 @@ function isValidMDP($mdp)
 if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
   $border = 'border border-danger';
 
+  // rajout d'un champ 'gender' dans le formulaire
+  if (empty($_POST['gender'])) {
+    $errorGender = '<small class="text-danger">Champ requis</small>';
+    $error = true;
+  }
+
   if (empty($_POST['firstName'])) {
     $errorFirstName = '<small class="text-danger">Champ requis</small>';
     $error = true;
@@ -81,6 +87,12 @@ if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = true;
       }
     }
+  }
+
+
+  if (empty($_POST['phone'])) {
+    $errorPhone = '<small class="text-danger">Champ requis</small>';
+    $error = true;
   }
 
   if (empty($_POST['address'])) {
@@ -132,11 +144,13 @@ if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
     // password_hash permet de créer une clé de hashage du mot de passe dans la BDD.
     $hashPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    $data = $connect_db->prepare("INSERT INTO user (firstName, lastName, email, address, city, zipcode, password) VALUES (:firstName, :lastName, :email, :address, :city, :zipcode, :password)");
+    $data = $connect_db->prepare("INSERT INTO user (gender, firstName, lastName, email, phone, address, city, zipcode, password) VALUES (:gender, :firstName, :lastName, :email, :phone, :address, :city, :zipcode, :password)");
 
+    $data->bindValue(':gender', $_POST['gender'], PDO::PARAM_STR);
     $data->bindValue(':firstName', $_POST['firstName'], PDO::PARAM_STR);
     $data->bindValue(':lastName', $_POST['lastName'], PDO::PARAM_STR);
     $data->bindValue(':email', $_POST['email'], PDO::PARAM_STR);
+    $data->bindValue(':phone', $_POST['phone'], PDO::PARAM_STR);
     $data->bindValue(':address', $_POST['address'], PDO::PARAM_STR);
     $data->bindValue(':city', $_POST['city'], PDO::PARAM_STR);
     $data->bindValue(':zipcode', $_POST['zipcode'], PDO::PARAM_STR);
@@ -193,13 +207,25 @@ require_once 'include/header.php';
 
           <form method="post" action="">
             <fieldset>
+
+              <!-- Rajouter un select pour définir male, female ou other -->
+              <?php if (isset($errorGender)) echo $errorGender; ?>
+
+              <select id="gender" class="mb-xl-3" name="gender" class="form-control <?php if (isset($errorGender)) echo $border; ?>">
+                <option value="">Sélectionnez votre genre</option>
+                <option value="male" <?php if (isset($_POST['gender']) && $_POST['gender'] == 'male') echo 'selected'; ?>>Homme</option>
+                <option value="female" <?php if (isset($_POST['gender']) && $_POST['gender'] == 'female') echo 'selected'; ?>>Femme</option>
+                <option value="other" <?php if (isset($_POST['gender']) && $_POST['gender'] == 'other') echo 'selected'; ?>>Autre</option>
+              </select>
+
+
               <?php
               if (isset($errorFirstName))
                 echo $errorFirstName
               ?>
               <input
                 type="text"
-                class="form-control <?php if (isset($errorFirstName)) echo $border; ?>"
+                class="form-control mt-lg-3 <?php if (isset($errorFirstName)) echo $border; ?>"
                 value="<?php if (isset($_POST['firstName'])) echo $_POST['firstName']; ?>"
                 placeholder=" Enter votre prénom"
                 name="firstName"
@@ -230,6 +256,19 @@ require_once 'include/header.php';
                 name="email"
                 onfocus="this.style.backgroundColor='#e0f7fa';"
                 onblur="this.style.backgroundColor='';" />
+
+              <?php if (isset($errorPhone))
+                echo $errorPhone
+              ?>
+              <input
+                type="text"
+                class="form-control <?php if (isset($errorPhone)) echo $border; ?>"
+                value="<?php if (isset($_POST['phone'])) echo $_POST['phone']; ?>"
+                placeholder=" Entrer votre numéro de téléphone"
+                name="phone"
+                onfocus="this.style.backgroundColor='#e0f7fa';"
+                onblur="this.style.backgroundColor='';" />
+
               <?php
               if (isset($errorAddress))
                 echo $errorAddress

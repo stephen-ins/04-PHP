@@ -380,6 +380,8 @@ require_once('include/header.php');
       </div>
     </section>
 
+    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum nesciunt blanditiis obcaecati soluta adipisci quisquam recusandae delectus corrupti ad ea laudantium impedit fuga, expedita dignissimos consequatur fugit. Beatae, ea id.
+
     <section class="section is-main-section">
       <div class="card">
         <header class="card-header">

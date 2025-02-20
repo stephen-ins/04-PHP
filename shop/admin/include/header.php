@@ -1,3 +1,47 @@
+<?php
+
+function logout()
+{
+  session_destroy();
+  header('Location: ../index.php');
+  exit();
+}
+
+// Commande pour logout
+if (isset($_GET['logout'])) {
+  logout();
+}
+
+
+// Vérifier si l'admin et connecté
+// if (!adminConnected()) {
+//   header('location: ../index.php');
+//   exit();
+// }
+// Vérifier qui est connecté
+if (isset($_SESSION['user'])) {
+  $user = $_SESSION['user'];
+}
+
+// Les données de la personne connectée
+// echo '<pre>';
+// print_r($user);
+// echo '</pre>';
+
+// Vérifier le role de l'utilisateur --> si c'est un admin
+// echo '<pre>';
+// var_dump($_SESSION['user']['roles']);
+// echo '</pre>';
+
+// Dans ce cas, je souhaite afficher son nom, son prénom et sa photo de profil sur la navbar
+
+
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html
   lang="en"
@@ -7,17 +51,22 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Boutique Admin Dashboard</title>
+  <script>
+    function logout() {
+      window.location.href = "<?php echo $_SERVER['PHP_SELF']; ?>?logout=true";
+    }
+  </script>
+</head>
 
-  <!-- Bulma is included -->
-  <link rel="stylesheet" href="../assets/css/main.min.css" />
+<!-- Bulma is included -->
+<link rel="stylesheet" href="../assets/css/main.min.css" />
 
-  <!-- Fonts -->
-  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-  <link
-    href="https://fonts.googleapis.com/css?family=Nunito"
-    rel="stylesheet"
-    type="text/css" />
+<!-- Fonts -->
+<link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+<link
+  href="https://fonts.googleapis.com/css?family=Nunito"
+  rel="stylesheet"
+  type="text/css" />
 </head>
 
 <body>
@@ -32,20 +81,22 @@
         <div class="navbar-end">
           <div
             class="navbar-item has-dropdown has-dropdown-with-icons has-divider has-user-avatar is-hoverable">
+
             <a class="navbar-link is-arrowless">
               <div class="is-user-avatar">
                 <img
-                  src="https://avatars.dicebear.com/v2/initials/john-doe.svg"
-                  alt="John Doe" />
+                  src="<?php echo ($user['gender'] == 'male') ? '../assets/images-famma/portrait_homme.jpg' : '../assets/images-famma/portrait_femme.jpg'; ?>"
+                  alt="Nom Prénom" />
               </div>
-              <div class="is-user-name"><span>John Doe</span></div>
+              <div class="is-user-name"><span><?php echo strtoupper($user['lastName'] . ', ' . $user['firstName']); ?></span></div>
               <!-- <span class="icon"><i class="mdi mdi-chevron-down"></i></span> -->
             </a>
+
             <!-- <div class="navbar-dropdown">
                 <a href="profile.php" class="navbar-item">
                   <span class="icon"><i class="mdi mdi-account"></i></span>
                   <span>My Profile</span>
-                </a>
+          <a href="#" onclick="logout()" title="Log out" class="navbar-item is-desktop-icon-only">
                 <a class="navbar-item">
                   <span class="icon"><i class="mdi mdi-settings"></i></span>
                   <span>Settings</span>
@@ -61,9 +112,11 @@
                 </a>
               </div> -->
           </div>
-          <a title="Log out" class="navbar-item is-desktop-icon-only">
+          <a href="" onclick="logout()" title="Déconnexion" class="navbar-item is-desktop-icon-only">
             <span class="icon"><i class="mdi mdi-logout"></i></span>
             <span>Log out</span>
+          </a>
+
           </a>
         </div>
       </div>
@@ -106,9 +159,15 @@
             </a>
           </li>
           <li>
-            <a href="../index.php" title="Log out" class="has-icon">
+            <a href="../index.php" title="Retour en arrière" class="has-icon">
               <span class="icon"><i class="mdi mdi-logout"></i></span>
-              <span>Quitter</span>
+              <span>Page d'accueil</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="logout()" title="Déconnexion" class="has-icon">
+              <span class="icon"><i class="mdi mdi-logout"></i></span>
+              <span>Se déconnecter</span>
             </a>
           </li>
         </ul>

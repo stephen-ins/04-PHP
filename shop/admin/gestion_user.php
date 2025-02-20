@@ -45,6 +45,13 @@ require_once('include/header.php');
 ?>
 
 
+<!-- jQuery (OBLIGATOIRE pour DataTables) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 
 <section class="section is-title-bar">
   <div class="level">
@@ -75,10 +82,10 @@ require_once('include/header.php');
   </div>
 </section>
 <section class="section is-main-section">
-  <div class="notification is-primary">
+  <!-- <div class="notification is-primary">
     <button class="delete"></button>
     Le client a été retiré avec succès.
-  </div>
+  </div> -->
   <div class="card has-table">
     <header class="card-header">
       <p class="card-header-title">
@@ -92,64 +99,61 @@ require_once('include/header.php');
     <div class="card-content">
       <div class="b-table has-pagination">
         <div class="table-wrapper has-mobile-cards">
-          <table
-            class="table is-fullwidth is-striped is-hoverable is-fullwidth">
+          <table id="table-clients" class="table is-fullwidth is-striped is-hoverable">
             <thead>
               <tr>
-                <th class="is-checkbox-cell">
-
-                </th>
-
+                <th class="is-checkbox-cell"></th>
+                <th>Customer number</th>
                 <th>Firstname</th>
                 <th>Lastname</th>
                 <th>Email</th>
                 <th>Phone</th>
                 <th>City</th>
                 <th>Account created</th>
-                <th></th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              <!-- Par tour de boucle, insérer les 'roles' user dans ce tableau -->
               <?php foreach ($dataUsers as $user) : ?>
                 <tr>
-
                   <td class="is-image-cell">
                     <div class="image">
-                      <img
-                        src="<?php echo ($user['gender'] == 'female') ? '../assets/images-famma/portrait_femme.jpg' : '../assets/images-famma/portrait_homme.jpg'; ?>"
-                        class="" />
+                      <img src="<?php echo ($user['gender'] == 'female') ? '../assets/images-famma/portrait_femme.jpg' : '../assets/images-famma/portrait_homme.jpg'; ?>" />
                     </div>
-
-
+                  </td>
+                  <td data-label="Customer number" class="has-text-centered"><?php echo 'CUSTOMER ' . $user['id_user']; ?></td>
                   <td data-label="Firstname"><?php echo $user['firstName']; ?></td>
-                  <td data-label="Lastname"><?php echo $user['lastName']; ?></td>
+                  <td data-label="Lastname"><?php echo strtoupper($user['lastName']); ?></td>
                   <td data-label="Email"><?php echo $user['email']; ?></td>
-                  <td data-label="Email"><?php echo $user['phone']; ?></td>
+                  <td data-label="Phone"><?php echo $user['phone']; ?></td>
                   <td data-label="City"><?php echo $user['city']; ?></td>
                   <td data-label="Created"><?php echo $user['created']; ?></td>
-
-                  </td>
                   <td class="is-actions-cell">
                     <div class="buttons is-right">
-                      <button
-                        class="button is-small is-primary"
-                        type="button">
+                      <button class="button is-small is-primary" type="button">
                         <span class="icon"><i class="mdi mdi-eye"></i></span>
-                      </button>
-                      <button
-                        class="button is-small is-danger jb-modal"
-                        data-target="sample-modal"
-                        type="button">
-                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
                       </button>
                     </div>
                   </td>
                 </tr>
               <?php endforeach; ?>
-
             </tbody>
           </table>
+
+          <script>
+            $(document).ready(function() {
+              $("#table-clients").DataTable({
+                language: {
+                  url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json",
+                },
+                aoColumnDefs: [{
+                  bSortable: false,
+                  aTargets: [0, 8],
+                }, ],
+              });
+            });
+          </script>
+
         </div>
         <!-- <div class="notification">
                 <div class="level">
@@ -190,19 +194,20 @@ require_once('include/header.php');
     <div class="card-content">
       <div class="b-table has-pagination">
         <div class="table-wrapper has-mobile-cards">
-          <table
+          <table id="table-clients0"
             class="table is-fullwidth is-striped is-hoverable is-fullwidth">
             <thead>
               <tr>
                 <th class="is-checkbox-cell">
                 </th>
+                <th>Custom member</th>
                 <th>Firstname</th>
                 <th>Lastname</th>
                 <th>Email</th>
                 <th>Phone</th>
                 <th>City</th>
-                <th>Created</th>
-                <th></th>
+                <th>Account created</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -218,8 +223,9 @@ require_once('include/header.php');
                     </div>
                   </td>
 
+                  <td data-label="Firstname" class="has-text-centered">ADMIN<?php echo $admin['id_user']; ?></td>
                   <td data-label="Firstname"><?php echo $admin['firstName']; ?></td>
-                  <td data-label="Lastname"><?php echo $admin['lastName']; ?></td>
+                  <td data-label="Lastname"><?php echo   strtoupper($admin['lastName']); ?></td>
                   <td data-label="Email"><?php echo $admin['email']; ?></td>
                   <td data-label="Email"><?php echo $admin['phone']; ?></td>
                   <td data-label="City"><?php echo $admin['city']; ?></td>
@@ -234,12 +240,7 @@ require_once('include/header.php');
                         type="button">
                         <span class="icon"><i class="mdi mdi-eye"></i></span>
                       </button>
-                      <button
-                        class="button is-small is-danger jb-modal"
-                        data-target="sample-modal"
-                        type="button">
-                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                      </button>
+
                     </div>
                   </td>
                 </tr>
@@ -247,6 +248,21 @@ require_once('include/header.php');
 
             </tbody>
           </table>
+
+          <script>
+            $(document).ready(function() {
+              $("#table-clients0").DataTable({
+                language: {
+                  url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json",
+                },
+                aoColumnDefs: [{
+                  bSortable: false,
+                  aTargets: [0, 8],
+                }, ],
+              });
+            });
+          </script>
+
         </div>
         <!-- <div class="notification">
                 <div class="level">
@@ -273,7 +289,7 @@ require_once('include/header.php');
   </div>
 </section>
 
-<section class="section is-main-section">
+<!-- <section class="section is-main-section">
   <div class="card">
     <header class="card-header">
       <p class="card-header-title">
@@ -391,9 +407,10 @@ require_once('include/header.php');
         </div>
         <hr />
         <div class="field is-horizontal">
-          <div class="field-label">
-            <!-- Left empty for spacing -->
-          </div>
+          <div class="field-label"> -->
+
+<!-- Left empty for spacing -->
+<!-- </div>
           <div class="field-body">
             <div class="field">
               <div class="field is-grouped">
@@ -416,7 +433,7 @@ require_once('include/header.php');
       </form>
     </div>
   </div>
-</section>
+</section> -->
 
 <?php
 require_once('include/footer.php');

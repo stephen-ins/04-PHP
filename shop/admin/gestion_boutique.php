@@ -135,9 +135,9 @@ $products = $data->fetchAll(PDO::FETCH_ASSOC);
 
 $nbProducts = $data->rowCount();
 if ($nbProducts <= 1)
-  $txt = "$nbProducts produit";
+  $txt = "$nbProducts article";
 else
-  $txt = "$nbProducts produits";
+  $txt = "$nbProducts articles";
 
 if (isset($_GET['action']) && $_GET['action'] == 'update') {
   $data = $connect_db->prepare('SELECT * FROM product WHERE id_product = :id');
@@ -159,7 +159,11 @@ require_once('include/header.php');
 
 
 
-
+<!-- jQuery (OBLIGATOIRE pour DataTables) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 <section class="section is-title-bar">
   <div class="level">
@@ -204,7 +208,7 @@ require_once('include/header.php');
         <span class="icon"><span class="mdi mdi-shopping-outline"></span>
         </span>
         <!-- affichage du nombres de produits avec condition produit avec ou sans (s) -->
-        Liste des <?= $txt; ?>
+        <span>Liste des <span style="color: red;"><?= $txt; ?></span> actuellement dans la base de donnée</span>
       </p>
       <a href="#" class="card-header-icon">
         <span class="icon"><i class="mdi mdi-reload"></i></span>
@@ -213,16 +217,16 @@ require_once('include/header.php');
     <div class="card-content">
       <div class="b-table has-pagination">
         <div class="table-wrapper has-mobile-cards">
-          <table
+          <table id="table-clients0"
             class="table is-fullwidth is-striped is-hoverable is-fullwidth">
             <thead>
               <tr>
 
                 <th class="is-checkbox-cell">
-                  <label class="b-checkbox checkbox">
+                  <!-- <label class="b-checkbox checkbox">
                     <input type="checkbox" value="false" />
                     <span class="check"></span>
-                  </label>
+                  </label> -->
                 </th>
 
 
@@ -325,6 +329,21 @@ require_once('include/header.php');
 
             </tbody>
           </table>
+
+          <script>
+            $(document).ready(function() {
+              $("#table-clients0").DataTable({
+                language: {
+                  url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json",
+                },
+                aoColumnDefs: [{
+                  bSortable: false,
+                  aTargets: [0, 4, 8, 12],
+                }, ],
+              });
+            });
+          </script>
+
         </div>
         <!-- <div class="notification">
                 <div class="level">
@@ -540,13 +559,13 @@ require_once('include/header.php');
                     <span>Enregistrer</span>
                   </button>
                 </div>
-                <div class="control">
+                <!-- <div class="control">
                   <button
                     type="button"
                     class="button is-primary is-outlined">
                     <span>Reset</span>
                   </button>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>

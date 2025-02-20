@@ -21,7 +21,7 @@ $dataProducts = $selectAllProduct->fetchAll(PDO::FETCH_ASSOC);
 
 // Filtrer les produits dont le stock est inférieur à 20
 $dataProducts = array_filter($dataProducts, function ($product) {
-  return $product['stock'] < 20;
+  return $product['stock'] < 15;
 });
 // echo '<pre>';
 // print_r($dataProducts);
@@ -81,7 +81,12 @@ require_once('include/header.php');
 ?>
 
 
+<!-- jQuery (OBLIGATOIRE pour DataTables) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 <section class="section is-title-bar">
   <div class="level">
@@ -121,7 +126,7 @@ require_once('include/header.php');
         <div class="level-item">
           <div class="is-widget-label" style="text-align: center; width: 100%;">
             <h3 class="subtitle is-spaced" style="text-align: left;">Best selling product</h3>
-            <img src="<?php echo $bestProductInfo['picture'] ?>" alt="" style="max-width: 100%;">
+            <img src="<?php echo $bestProductInfo['picture'] ?>" alt="" style="max-width: 70%;">
             <h1 class="m-5 title"><?php echo $bestProductInfo['title'] ?></h1>
           </div>
 
@@ -195,8 +200,12 @@ require_once('include/header.php');
       <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
 
       <!-- ici le nombre d'article avec un stock insuffisant c'est à dire > 20 (stock) -->
-
-      <span style="color: red; font-weight: bold;"> <?= count($dataProducts) ?> </span> produits dont le stock est insuffisant
+      <span>
+        <span style="color: red; font-weight: bold;">
+          <?= count($dataProducts) ?>
+        </span>
+        produit<?= count($dataProducts) > 1 ? 's' : '' ?> dont le stock est en dessous de 15 articles
+      </span>
 
     </p>
     <a href="#" class="card-header-icon">
@@ -208,7 +217,7 @@ require_once('include/header.php');
   <div class="card-content">
     <div class="b-table has-pagination">
       <div class="table-wrapper has-mobile-cards">
-        <table
+        <table id="table-clients"
           class="table is-fullwidth is-striped is-hoverable is-sortable is-fullwidth">
           <thead>
             <tr>
@@ -219,7 +228,7 @@ require_once('include/header.php');
               <th>Size</th>
               <th>Date entered</th>
               <th>Current stock</th>
-              <th></th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -249,19 +258,29 @@ require_once('include/header.php');
                       type="button">
                       <span class="icon"><i class="mdi mdi-eye"></i></span>
                     </button>
-                    <button
-                      class="button is-small is-danger jb-modal"
-                      data-target="sample-modal"
-                      type="button">
-                      <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                    </button>
                   </div>
                 </td>
+
               </tr>
 
             <?php endforeach; ?>
           </tbody>
         </table>
+
+        <script>
+          $(document).ready(function() {
+            $("#table-clients").DataTable({
+              language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json",
+              },
+              aoColumnDefs: [{
+                bSortable: false,
+                aTargets: [0, 7],
+              }, ],
+            });
+          });
+        </script>
+
       </div>
       <!-- <div class="notification">
                 <div class="level">

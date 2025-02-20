@@ -8,6 +8,59 @@ if (!adminConnected()) {
   header('location:' . URL . 'index.php');
 }
 
+// Afficher les commandes en cours de traitement provenant de la table order
+$selectAllOrders = $connect_db->query("SELECT * FROM `order` WHERE state = 'treatment'");
+// echo '<pre>';
+// print_r($selectAllOrders);
+// echo '</pre>';
+$selectAllOrders = $selectAllOrders->fetchAll(PDO::FETCH_ASSOC);
+// echo '<pre>';
+// print_r($selectAllOrders);
+// echo '</pre>';
+
+// Afficher les clients qui ont passé des commandes en cours de traitment via une requete inner join
+$selectAllClients = $connect_db->query("SELECT * FROM `order` INNER JOIN user ON `order`.user_id = id_user WHERE `order`.state = 'treatment'");
+// echo '<pre>';
+// print_r($selectAllClients);
+// echo '</pre>';
+$selectAllClients = $selectAllClients->fetchAll(PDO::FETCH_ASSOC);
+// echo '<pre>';
+// print_r($selectAllClients);
+// echo '</pre>';
+
+// J'ai maintenant les 11 commandes (actuelles) associé au client que j'aimerais afficher dans le tableau par tour de boucle
+// Afficher les colonnes dans l'ordre suivant: id_order, id_user, created, rising, state, firstname, lastname, email, phone
+// Ce qui done 9 colonnes à afficher : 
+// Numéro de clients: Customer number
+// Numéro de commande: Order number
+// Date de commande: Order date
+// Montant: Amount
+// État de la commande: Order status
+// Prénom: First name
+// Nom: Last name
+// Email: Email
+// Téléphone: Phone
+
+
+
+
+
+
+// Afficher les produits commandés par les clients
+
+
+
+// Afficher le nombre de commande en cours de traitement
+$countOrders = $connect_db->query("SELECT COUNT(*) AS total_orders FROM `order` WHERE state = 'treatment'");
+$countOrders = $countOrders->fetch(PDO::FETCH_ASSOC)['total_orders'];
+// echo '<pre>';
+// print_r($countOrders);
+// echo '</pre>';
+
+
+
+
+
 
 require_once('include/header.php');
 
@@ -34,102 +87,19 @@ require_once('include/header.php');
     href="https://fonts.googleapis.com/css?family=Nunito"
     rel="stylesheet"
     type="text/css" />
+
+  <!-- jQuery (OBLIGATOIRE pour DataTables) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 </head>
 
 <body>
   <div id="app">
-    <nav id="navbar-main" class="navbar is-fixed-top">
-      <div class="navbar-brand">
-        <a class="navbar-item is-hidden-desktop jb-aside-mobile-toggle">
-          <span class="icon"><i class="mdi mdi-forwardburger mdi-24px"></i></span>
-        </a>
-      </div>
-      <div class="navbar-menu fadeIn animated faster" id="navbar-menu">
-        <div class="navbar-end">
-          <div
-            class="navbar-item has-dropdown has-dropdown-with-icons has-divider has-user-avatar is-hoverable">
-            <a class="navbar-link is-arrowless">
-              <div class="is-user-avatar">
-                <img
-                  src="https://avatars.dicebear.com/v2/initials/john-doe.svg"
-                  alt="John Doe" />
-              </div>
-              <div class="is-user-name"><span>John Doe</span></div>
-              <!-- <span class="icon"><i class="mdi mdi-chevron-down"></i></span> -->
-            </a>
-            <!-- <div class="navbar-dropdown">
-                <a href="profile.php" class="navbar-item">
-                  <span class="icon"><i class="mdi mdi-account"></i></span>
-                  <span>My Profile</span>
-                </a>
-                <a class="navbar-item">
-                  <span class="icon"><i class="mdi mdi-settings"></i></span>
-                  <span>Settings</span>
-                </a>
-                <a class="navbar-item">
-                  <span class="icon"><i class="mdi mdi-email"></i></span>
-                  <span>Messages</span>
-                </a>
-                <hr class="navbar-divider" />
-                <a class="navbar-item">
-                  <span class="icon"><i class="mdi mdi-logout"></i></span>
-                  <span>Log Out</span>
-                </a>
-              </div> -->
-          </div>
-          <a title="Log out" class="navbar-item is-desktop-icon-only">
-            <span class="icon"><i class="mdi mdi-logout"></i></span>
-            <span>Log out</span>
-          </a>
-        </div>
-      </div>
-    </nav>
-    <aside class="aside is-placed-left is-expanded">
-      <div class="aside-tools">
-        <div class="aside-tools-label">
-          <span><b>Boutique</b> Admin</span>
-        </div>
-      </div>
-      <div class="menu is-menu-main">
-        <p class="menu-label">General</p>
-        <ul class="menu-list">
-          <li>
-            <a href="index.php" class="has-icon">
-              <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
-              <span class="menu-item-label">Dashboard</span>
-            </a>
-          </li>
-        </ul>
-        <p class="menu-label">MENU</p>
-        <ul class="menu-list">
-          <li>
-            <a href="gestion_boutique.php" class="is-active has-icon">
-              <span class="icon has-update-mark"><span class="mdi mdi-store"></span>
-              </span>
-              <span class="menu-item-label">Boutique</span>
-            </a>
-          </li>
-          <li>
-            <a href="gestion_commande.php" class="has-icon">
-              <span class="icon"><span class="mdi mdi-sheep"></span> </span>
-              <span class="menu-item-label">Commandes</span>
-            </a>
-          </li>
-          <li>
-            <a href="gestion_user.php" class="has-icon">
-              <span class="icon"><i class="mdi mdi-account-circle"></i></span>
-              <span class="menu-item-label">Utilisateurs</span>
-            </a>
-          </li>
-          <li>
-            <a href="../index.php" title="Log out" class="has-icon">
-              <span class="icon"><i class="mdi mdi-logout"></i></span>
-              <span>Quitter</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </aside>
+
+
     <section class="section is-title-bar">
       <div class="level">
         <div class="level-left">
@@ -159,16 +129,21 @@ require_once('include/header.php');
       </div>
     </section>
     <section class="section is-main-section">
-      <div class="notification is-primary">
+      <!-- <div class="notification is-primary">
         <button class="delete"></button>
         Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-      </div>
+      </div> -->
       <div class="card has-table">
         <header class="card-header">
           <p class="card-header-title">
             <span class="icon"><span class="mdi mdi-cart-outline"></span>
+              <!-- Afficher les commandes le nombres de commande présentes dans BDD -->
             </span>
-            10 commandes
+
+            <span> <?php echo "<span style='color: red;'>$countOrders </span> commande" . ($countOrders > 1 ? "s" : ""); ?> en cours de traitement</span>
+
+
+
           </p>
           <a href="#" class="card-header-icon">
             <span class="icon"><i class="mdi mdi-reload"></i></span>
@@ -177,74 +152,102 @@ require_once('include/header.php');
         <div class="card-content">
           <div class="b-table has-pagination">
             <div class="table-wrapper has-mobile-cards">
-              <table
+              <table id="table-clients"
                 class="table is-fullwidth is-striped is-hoverable is-fullwidth">
                 <thead>
                   <tr>
                     <th class="is-checkbox-cell">
-                      <label class="b-checkbox checkbox">
+                      <!-- <label class="b-checkbox checkbox">
                         <input type="checkbox" value="false" />
                         <span class="check"></span>
-                      </label>
+                      </label> -->
                     </th>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Company</th>
-                    <th>City</th>
-                    <th>Progress</th>
-                    <th>Created</th>
-                    <th></th>
+
+                    <!-- <th></th> -->
+                    <th>Customer number</th>
+                    <th>Order number</th>
+                    <th>Order date</th>
+                    <th>Amount</th>
+                    <th>Order status</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td class="is-checkbox-cell">
-                      <label class="b-checkbox checkbox">
-                        <input type="checkbox" value="false" />
-                        <span class="check"></span>
-                      </label>
-                    </td>
-                    <td class="is-image-cell">
-                      <div class="image">
-                        <img
-                          src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg"
-                          class="is-rounded" />
-                      </div>
-                    </td>
-                    <td data-label="Name">Rebecca Bauch</td>
-                    <td data-label="Company">Daugherty-Daniel</td>
-                    <td data-label="City">South Cory</td>
-                    <td data-label="Progress" class="is-progress-cell">
-                      <progress
-                        max="100"
-                        class="progress is-small is-primary"
-                        value="79">
-                        79
-                      </progress>
-                    </td>
-                    <td data-label="Created">
-                      <small
-                        class="has-text-grey is-abbr-like"
-                        title="Oct 25, 2020">Oct 25, 2020</small>
-                    </td>
-                    <td class="is-actions-cell">
-                      <div class="buttons is-right">
-                        <button
-                          class="button is-small is-primary"
-                          type="button">
-                          <span class="icon"><i class="mdi mdi-eye"></i></span>
-                        </button>
-                        <button
-                          class="button is-small is-danger jb-modal"
-                          data-target="sample-modal"
-                          type="button">
-                          <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+
+                  <!-- Boucle foreach -->
+
+                  <?php foreach ($selectAllClients as $client) : ?>
+                    <tr>
+                      <td class="is-checkbox-cell">
+                        <label class="b-checkbox checkbox">
+                          <input type="checkbox" value="false" />
+                          <span class="check"></span>
+                        </label>
+                      </td>
+
+                      <td data-label="Customer number" style="text-align: center;">CUSTOMER<?php echo  $client['user_id'] ?></td>
+                      <td data-label="Order number" style="text-align: center;"> <span style="font-weight: bold; color: blue;"> FAMMS<?php echo $client['id_order'] ?></td>
+                      <td data-label="Order date"><?php echo date('d/m/Y H:i', strtotime($client['date'])) ?></td>
+                      <td data-label="Amount" style="text-align: right;"><span style="font-weight: bold; color: red;"><?php echo $client['rising'] ?></span> €</td>
+                      <td data-label="Order status" style="text-align: center;"><?php echo $client['state'] ?></td>
+                      <!-- <td data-label="Oder status" class="is-progress-cell">
+                        <progress
+                          max="100"
+                          class="progress is-small is-primary"
+                          value="50">
+                          50
+                        </progress>
+                      </td> -->
+                      <td data-label="Firstname"><?php echo $client['firstName'] ?></td>
+                      <td data-label="Lastname"><?php echo strtoupper($client['lastName']) ?></td>
+                      <td data-label="Email"><?php echo $client['email'] ?></td>
+                      <td data-label="Phone"><?php echo $client['phone'] ?></td>
+
+                      <!-- '<div class="alert alert-success text-center">Merci pour votre achat. Votre commande a bien été validée. Numéro de commande n°= ' . '<strong>FAMMS' . "$idOrder" . '</strong></div>'; -->
+
+
+
+                      <td class="is-actions-cell">
+                        <div class="buttons is-right">
+                          <button
+                            class="button is-small is-primary"
+                            type="button">
+                            <span class="icon"><i class="mdi mdi-eye"></i></span>
+                          </button>
+
+                          <button
+                            class="button is-small is-danger jb-modal"
+                            data-target="sample-modal"
+                            type="button">
+                            <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                          </button>
+
+                        </div>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+
                 </tbody>
               </table>
+
+              <script>
+                $(document).ready(function() {
+                  $("#table-clients").DataTable({
+                    language: {
+                      url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json",
+                    },
+                    aoColumnDefs: [{
+                      bSortable: false,
+                      aTargets: [0, 10],
+                    }, ],
+                  });
+                });
+              </script>
+
             </div>
             <!-- <div class="notification">
                 <div class="level">
@@ -271,7 +274,7 @@ require_once('include/header.php');
       </div>
     </section>
 
-    <section class="section is-main-section">
+    <!-- <section class="section is-main-section">
       <div class="card has-table">
         <header class="card-header">
           <p class="card-header-title">
@@ -354,8 +357,8 @@ require_once('include/header.php');
                   </tr>
                 </tbody>
               </table>
-            </div>
-            <!-- <div class="notification">
+            </div> -->
+    <!-- <div class="notification">
                 <div class="level">
                   <div class="level-left">
                     <div class="level-item">
@@ -375,12 +378,12 @@ require_once('include/header.php');
                   </div>
                 </div>
               </div> -->
-          </div>
+    <!-- </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
-    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum nesciunt blanditiis obcaecati soluta adipisci quisquam recusandae delectus corrupti ad ea laudantium impedit fuga, expedita dignissimos consequatur fugit. Beatae, ea id.
+
 
     <section class="section is-main-section">
       <div class="card">

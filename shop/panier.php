@@ -76,6 +76,10 @@ if (isset($_POST['payForCart'])) {
 }
 
 
+// Si je clique dans le panier et que celui-ci est vide, j'affiche un message qui remplacera le message 'Valider vos achats' !
+
+
+
 
 
 // echo '<pre>';
@@ -105,6 +109,9 @@ require_once 'include/header.php';
 <!-- product section -->
 <section class="product_section layout_padding">
   <div class="container">
+
+    <!-- Remplacer ce message par un autre message quand je clique sur l'icone voir mon panier d'achat -->
+
     <div class="heading_container heading_center">
       <h2>Valider vos <span>achats !</span></h2>
     </div>

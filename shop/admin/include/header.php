@@ -1,5 +1,6 @@
 <?php
 
+
 function logout()
 {
   session_destroy();
@@ -33,13 +34,11 @@ if (isset($_SESSION['user'])) {
 // var_dump($_SESSION['user']['roles']);
 // echo '</pre>';
 
-// Dans ce cas, je souhaite afficher son nom, son prénom et sa photo de profil sur la navbar
+// Activation du lien dans le menu je veux que le lien soit actif si je suis sur la page
 
 
 
 ?>
-
-
 
 
 <!DOCTYPE html>
@@ -121,6 +120,13 @@ if (isset($_SESSION['user'])) {
         </div>
       </div>
     </nav>
+
+    <!-- <?php
+          echo '<pre>';
+          print_r($_SERVER);
+          echo '</pre>';
+          ?> -->
+
     <aside class="aside is-placed-left is-expanded">
       <div class="aside-tools">
         <div class="aside-tools-label">
@@ -130,29 +136,30 @@ if (isset($_SESSION['user'])) {
       <div class="menu is-menu-main">
         <p class="menu-label">General</p>
         <ul class="menu-list">
-          <li>
+          <li class="<?php echo activeLink('/php/shop/admin/index.php'); ?>">
             <a href="index.php" class="has-icon">
               <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
               <span class="menu-item-label">Dashboard</span>
             </a>
           </li>
         </ul>
+
         <p class="menu-label">MENU</p>
+
         <ul class="menu-list">
-          <li>
-            <a href="gestion_boutique.php" class="is-active has-icon">
-              <span class="icon has-update-mark"><span class="mdi mdi-store"></span>
-              </span>
+          <li class="<?php echo activeLink('/php/shop/admin/gestion_boutique.php'); ?>">
+            <a href="gestion_boutique.php" class="has-icon">
+              <span class="icon"><span class="mdi mdi-store"></span></span>
               <span class="menu-item-label">Boutique</span>
             </a>
           </li>
-          <li>
+          <li class="<?php echo activeLink('/php/shop/admin/gestion_commande.php'); ?>">
             <a href="gestion_commande.php" class="has-icon">
               <span class="icon"><span class="mdi mdi-sheep"></span> </span>
               <span class="menu-item-label">Commandes</span>
             </a>
           </li>
-          <li>
+          <li class="<?php echo activeLink('/php/shop/admin/gestion_user.php'); ?>">
             <a href="gestion_user.php" class="has-icon">
               <span class="icon"><i class="mdi mdi-account-circle"></i></span>
               <span class="menu-item-label">Utilisateurs</span>

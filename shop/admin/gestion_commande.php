@@ -19,7 +19,7 @@ $selectAllOrders = $selectAllOrders->fetchAll(PDO::FETCH_ASSOC);
 // echo '</pre>';
 
 // Afficher les clients qui ont passé des commandes en cours de traitment via une requete inner join
-$selectAllClients = $connect_db->query("SELECT * FROM `order` INNER JOIN user ON `order`.user_id = id_user WHERE `order`.state = 'treatment'");
+$selectAllClients = $connect_db->query("SELECT * FROM `order` INNER JOIN user ON `order`.user_id = id_user WHERE `order`.state IN ('treatment', 'sent', 'delivered')");
 // echo '<pre>';
 // print_r($selectAllClients);
 // echo '</pre>';
@@ -43,19 +43,25 @@ $selectAllClients = $selectAllClients->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-
-
-
-// Afficher les produits commandés par les clients
-
-
-
 // Afficher le nombre de commande en cours de traitement
 $countOrders = $connect_db->query("SELECT COUNT(*) AS total_orders FROM `order` WHERE state = 'treatment'");
 $countOrders = $countOrders->fetch(PDO::FETCH_ASSOC)['total_orders'];
 // echo '<pre>';
 // print_r($countOrders);
 // echo '</pre>';
+
+// Requete de mise à jour BDD au changement d'etat de la commande
+if (!empty($_POST)) {
+  // mise à jour de l'etat de la commande, on utilise une requete préparée, car on a des données provenant de l'utilisateur
+  $updateState = $connect_db->prepare("UPDATE `order` SET state = :state WHERE id_order = :id_order");
+  $updateState->bindValue(':state', $_POST['state'], PDO::PARAM_STR);
+  $updateState->bindValue(':id_order', $_POST['id_order'], PDO::PARAM_INT);
+  $updateState->execute();
+
+  header('location: gestion_commande.php');
+}
+
+
 
 
 
@@ -80,6 +86,8 @@ require_once('include/header.php');
 
   <!-- Bulma is included -->
   <link rel="stylesheet" href="../assets/css/main.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
@@ -142,8 +150,6 @@ require_once('include/header.php');
 
             <span> <?php echo "<span style='color: red;'>$countOrders </span> commande" . ($countOrders > 1 ? "s" : ""); ?> en cours de traitement</span>
 
-
-
           </p>
           <a href="#" class="card-header-icon">
             <span class="icon"><i class="mdi mdi-reload"></i></span>
@@ -188,26 +194,40 @@ require_once('include/header.php');
                           <span class="check"></span>
                         </label>
                       </td>
-
+                      <style>
+                        tr {
+                          height: 60px;
+                          vertical-align: middle;
+                        }
+                      </style>
                       <td data-label="Customer number" style="text-align: center;">CUSTOMER<?php echo  $client['user_id'] ?></td>
                       <td data-label="Order number" style="text-align: center;"> <span style="font-weight: bold; color: blue;"> FAMMS<?php echo $client['id_order'] ?></td>
                       <td data-label="Order date"><?php echo date('d/m/Y H:i', strtotime($client['date'])) ?></td>
                       <td data-label="Amount" style="text-align: right;"><span style="font-weight: bold; color: red;"><?php echo $client['rising'] ?></span> €</td>
-                      <td data-label="Order status" style="text-align: center;"><?php echo $client['state'] ?></td>
-                      <!-- <td data-label="Oder status" class="is-progress-cell">
-                        <progress
-                          max="100"
-                          class="progress is-small is-primary"
-                          value="50">
-                          50
-                        </progress>
-                      </td> -->
+
+                      <td data-label="Order status" style="text-align: center;">
+
+                        <form action="" method="post" style="display: flex; align-items: center;">
+                          <input type="hidden" name="id_order" value="<?php echo $client['id_order'] ?>">
+                          <div class="select" style="margin-right: 10px;">
+                            <select class="small-select" style="height: 20px;" name="state">
+                              <option value="treatment" <?php echo $client['state'] == 'treatment' ? 'selected' : '' ?>>Treatment</option>
+                              <option value="sent" <?php echo $client['state'] == 'sent' ? 'selected' : '' ?>>Sent</option>
+                              <option value="delivered" <?php echo $client['state'] == 'delivered' ? 'selected' : '' ?>>Delivered</option>
+                            </select>
+                          </div>
+                          <button type="submit" class="button is-success is-small" title="Valider">
+                            <i class="fa-solid fa-circle-check"></i>
+                          </button>
+                        </form>
+
+                      </td>
+                      <!-- <td data-label="Order status" style="text-align: center;"><?php echo $client['state'] ?></td> -->
+
                       <td data-label="Firstname"><?php echo $client['firstName'] ?></td>
                       <td data-label="Lastname"><?php echo strtoupper($client['lastName']) ?></td>
                       <td data-label="Email"><?php echo $client['email'] ?></td>
                       <td data-label="Phone"><?php echo $client['phone'] ?></td>
-
-                      <!-- '<div class="alert alert-success text-center">Merci pour votre achat. Votre commande a bien été validée. Numéro de commande n°= ' . '<strong>FAMMS' . "$idOrder" . '</strong></div>'; -->
 
 
 

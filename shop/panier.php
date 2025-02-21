@@ -26,6 +26,7 @@ if (isset($_POST['add_cart'])) {
 }
 
 if (isset($_POST['payForCart'])) {
+
   $error = '';
   // echo 'Procédure de paiement';
 
@@ -76,7 +77,8 @@ if (isset($_POST['payForCart'])) {
 }
 
 
-// Si je clique dans le panier et que celui-ci est vide, j'affiche un message qui remplacera le message 'Valider vos achats' !
+
+
 
 
 

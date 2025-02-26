@@ -97,6 +97,69 @@ $totalOrders = $totalOrdersQuery->fetch(PDO::FETCH_ASSOC)['total_orders'];
 // echo '</pre>';
 
 
+// if (isset($_GET['action']) && $_GET['action'] == 'update') {
+//   if (isset($_POST['stock'], $_POST['id_product'])) {
+//     // Préparer la requête avec `prepare()`
+//     $data = $connect_db->prepare('UPDATE product SET stock = :stock WHERE id_product = :id_product');
+
+//     // Lier les valeurs
+//     $data->bindValue(':stock', (int) $_POST['stock'], PDO::PARAM_INT);
+//     $data->bindValue(':id_product', $_POST['id_product'], PDO::PARAM_INT);
+
+//     // Exécuter la requête
+//     if ($data->execute()) {
+//       header('Location: index.php');
+//       exit;
+//     }
+//   }
+// }
+
+
+// Traitement du formulaire de mise à jour du stock
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'], $_POST['new_stock'])) {
+  $product_id = $_POST['product_id'];
+  $new_stock = (int) $_POST['new_stock'];
+
+  // Mettre à jour le stock dans la base de données
+  $query = $connect_db->prepare("UPDATE product SET stock = :stock WHERE reference = :id");
+  $query->bindValue(':stock', $new_stock, PDO::PARAM_INT);
+  $query->bindValue(':id', $product_id, PDO::PARAM_STR);
+  $query->execute();
+
+  // Récupérer les nouvelles données des produits
+  $selectAllProduct = $connect_db->query("SELECT picture, reference, title, category, size, created, stock FROM product");
+  $dataProducts = $selectAllProduct->fetchAll(PDO::FETCH_ASSOC);
+
+  // Filtrer les produits dont le stock est inférieur à 20
+  $dataProducts = array_filter($dataProducts, function ($product) {
+    return $product['stock'] < 15;
+  });
+
+  // Changer la date format pour un D M Y et heure
+  $dataProducts = array_map(function ($product) {
+    $product['created'] = date('d/m/Y H:i:s', strtotime($product['created']));
+    return $product;
+  }, $dataProducts);
+}
+
+
+
+
+
+
+
+
+// if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['product_id']) && isset($_POST['new_stock'])) {
+//   $updateStock = $connect_db->prepare('UPDATE product SET stock = :stock WHERE reference = :reference');
+//   $updateStock->bindValue(':stock', $_POST['new_stock'], PDO::PARAM_INT);
+//   $updateStock->bindValue(':reference', $_POST['product_id'], PDO::PARAM_STR);
+//   $updateStock->execute();
+//   header('Location: index.php');
+//   exit;
+// }
+
+
+
 
 
 require_once('include/header.php');
@@ -140,13 +203,13 @@ require_once('include/header.php');
 
 
 <div class="tile is-parent is- is-vertical is-align-items-center">
-  <div class="card tile is-child" style="width: 100%;">
-    <div class="card-content">
+  <div class="card tile is-child" style="width: 100%;  background-color:rgb(219, 219, 219) ;">
+    <div class=" card-content">
       <div class="level is-mobile">
         <!-- Affichage du produit le plus vendu -->
         <div class="level-item" style="flex: 1;">
           <div class="is-widget-label" style="text-align: center;">
-            <h3 class="subtitle is-spaced" style="text-align: center; margin-bottom: 2cm; text-decoration: underline; color: lightgray;">Best selling product</h3>
+            <h3 class="subtitle is-spaced" style="text-align: center; margin-bottom: 2cm; text-decoration: underline; color: black;">Best selling product</h3>
             <img src="<?php echo $mostPopularProductInfo['picture'] ?>" alt="" style="max-width: 40%;">
             <h1 class="m-5 title"><?php echo $mostPopularProductInfo['title'] ?></h1>
           </div>
@@ -161,7 +224,7 @@ require_once('include/header.php');
         <!-- Affichage du produit le moins vendu -->
         <div class="level-item" style="flex: 1;">
           <div class="is-widget-label" style="text-align: center;">
-            <h3 class="subtitle is-spaced" style="text-align: center; margin-bottom: 2cm; text-decoration: underline; color: lightgray">Least selling product</h3>
+            <h3 class="subtitle is-spaced" style="text-align: center; margin-bottom: 2cm; text-decoration: underline; color: black">Least selling product</h3>
             <img src="<?php echo $leastPopularProductInfo['picture'] ?>" alt="" style="max-width: 40%;">
             <h1 class="m-5 title"><?php echo $leastPopularProductInfo['title'] ?></h1>
           </div>
@@ -180,7 +243,7 @@ require_once('include/header.php');
 <section class="section is-main-section">
   <div class="tile is-ancestor">
     <div class="tile is-parent">
-      <div class="card tile is-child">
+      <div class="card tile is-child" style="background-color:rgb(204, 204, 204);">
         <div class="card-content">
           <div class="level is-mobile">
             <div class="level-item">
@@ -200,7 +263,7 @@ require_once('include/header.php');
       </div>
     </div>
     <div class="tile is-parent">
-      <div class="card tile is-child">
+      <div class="card tile is-child" style=" background-color:rgb(204, 204, 204);">
         <div class="card-content">
           <div class="level is-mobile">
             <div class="level-item">
@@ -226,8 +289,8 @@ require_once('include/header.php');
 <section class="section is-main-section">
   <div class="tile is-ancestor">
     <div class="tile is-parent">
-      <div class="card tile is-child">
-        <div class="card-content">
+      <div class="card tile is-child" style=" background-color:rgb(204, 204, 204);">
+        <div class=" card-content">
           <div class="level is-mobile">
             <div class="level-item">
               <div class="is-widget-label">
@@ -245,7 +308,7 @@ require_once('include/header.php');
       </div>
     </div>
     <div class="tile is-parent">
-      <div class="card tile is-child">
+      <div class="card tile is-child" style=" background-color:rgb(204, 204, 204);">
         <div class="card-content">
           <div class="level is-mobile">
             <div class="level-item">
@@ -324,17 +387,55 @@ require_once('include/header.php');
                 <td data-label="Stock"><strong style="color: red;"><?php echo $product['stock']; ?></strong></td>
 
 
+                <!-- Mise à jour du current stock via une modale -->
+
                 <td class="is-actions-cell">
                   <div class="buttons is-right">
                     <button
-                      class="button is-small is-primary"
-                      type="button">
+                      type="button"
+                      class="button is-small is-primary jb-modal"
+                      data-target="sample-modal-<?= $product['reference'] ?>">
                       <span class="icon"><i class="mdi mdi-eye"></i></span>
                     </button>
                   </div>
                 </td>
-
               </tr>
+              <!-- La modale -->
+              <div id="sample-modal-<?= $product['reference'] ?>" class="modal">
+                <div class="modal-background jb-modal-close"></div>
+                <div class="modal-card" style="text-align: center;">
+                  <header class="modal-card-head" style="justify-content: center;">
+                    <p class="modal-card-title">Mettre à jour le stock</p>
+                    <button class="delete jb-modal-close" aria-label="close"></button>
+                  </header>
+                  <?php if (isset($message)): ?>
+                    <div class="notification is-success">
+                      <?= htmlspecialchars($message) ?>
+                    </div>
+                  <?php endif; ?>
+                  <section class="modal-card-body">
+                    <form action="" method="post">
+                      <input type="hidden" name="product_id" value="<?= $product['reference'] ?>">
+                      <div class="field">
+                        <label class="label">Nouveau stock</label>
+                        <div class="control" style="width: 30%; margin: 0 auto;">
+                          <input class="input" type="number" name="new_stock" min="0" required>
+                        </div>
+                      </div>
+                      <div class="field is-grouped" style="justify-content: center; margin-top: 2cm;">
+                        <div class="control">
+                          <button type="submit" class="button is-primary">Mettre à jour</button>
+                        </div>
+                        <div class="control">
+                          <button type="button" class="button jb-modal-close">Annuler</button>
+                        </div>
+                      </div>
+                    </form>
+
+                  </section>
+                </div>
+                <button class="modal-close is-large jb-modal-close" aria-label="close"></button>
+              </div>
 
             <?php endforeach; ?>
           </tbody>

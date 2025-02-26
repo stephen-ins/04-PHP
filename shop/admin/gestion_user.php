@@ -181,7 +181,7 @@ require_once('include/header.php');
                     <div class="column">
                       <?php foreach ($orderData as $order) : ?>
                         <?php if ($order['user_id'] == $client['id_user']) : ?>
-                          <p><strong style="color: red;"><?= 'FAMMS' . $order['id_order'] ?></strong></p>
+                          <span><strong style="color: red;"><?= 'FAMMS' . $order['id_order'] ?></strong></span>
                         <?php endif; ?>
                       <?php endforeach; ?>
                       <p><?= 'CUSTOMER' . $client['id_user'] ?></p>

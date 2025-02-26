@@ -8,25 +8,36 @@ if (!adminConnected()) {
   header('location:' . URL . 'index.php');
 }
 
-// Afficher les commandes en cours de traitement provenant de la table order
-$selectAllOrders = $connect_db->query("SELECT * FROM `order` WHERE state = 'treatment'");
-// echo '<pre>';
-// print_r($selectAllOrders);
-// echo '</pre>';
+
+
+
+// Associer les commandes aux clients via une requete inner join
+$selectAllOrders = $connect_db->query("SELECT * FROM `order` INNER JOIN user ON `order`.user_id = user.id_user WHERE state IN ('treatment', 'sent', 'delivered', 'cancelled')");
 $selectAllOrders = $selectAllOrders->fetchAll(PDO::FETCH_ASSOC);
 // echo '<pre>';
 // print_r($selectAllOrders);
 // echo '</pre>';
 
-// Afficher les clients qui ont passé des commandes en cours de traitment via une requete inner join
-$selectAllClients = $connect_db->query("SELECT * FROM `order` INNER JOIN user ON `order`.user_id = id_user WHERE `order`.state IN ('treatment', 'sent', 'delivered')");
+
+// Afficher les clients qui ont passé des commandes via une requete inner join. Il y aura une relation entre les tables order, order_details, user et product :
+// Si je supprime un client, je dois supprimer toutes les commandes associées à ce client.
+// Si je supprime une commande, je dois supprimer les détails de la commande associée.
+// Si je supprime un produit, je dois supprimer les produits qui seront dans les détails de la commande associée.
+
+
+$selectAllOrdersDetails = $connect_db->query("
+    SELECT user.id_user, user.firstName, user.lastName, user.email, order.id_order, order.date, order.rising, order.state, order.user_id, order_details.order_id, product.id_product, order_details.product_id, user.phone
+    FROM `order`
+    INNER JOIN user ON user.id_user = `order`.user_id
+    INNER JOIN order_details ON `order`.id_order = order_details.order_id
+    INNER JOIN product ON order_details.product_id = product.id_product
+");
+
+$selectAllOrdersDetails = $selectAllOrdersDetails->fetchAll(PDO::FETCH_ASSOC);
 // echo '<pre>';
-// print_r($selectAllClients);
+// print_r($selectAllOrdersDetails);
 // echo '</pre>';
-$selectAllClients = $selectAllClients->fetchAll(PDO::FETCH_ASSOC);
-// echo '<pre>';
-// print_r($selectAllClients);
-// echo '</pre>';
+
 
 // J'ai maintenant les 11 commandes (actuelles) associé au client que j'aimerais afficher dans le tableau par tour de boucle
 // Afficher les colonnes dans l'ordre suivant: id_order, id_user, created, rising, state, firstname, lastname, email, phone
@@ -43,8 +54,10 @@ $selectAllClients = $selectAllClients->fetchAll(PDO::FETCH_ASSOC);
 
 
 
+
+
 // Afficher le nombre de commande en cours de traitement
-$countOrders = $connect_db->query("SELECT COUNT(*) AS total_orders FROM `order` WHERE state = 'treatment'");
+$countOrders = $connect_db->query("SELECT COUNT(*) AS total_orders FROM `order` WHERE state IN ('treatment', 'sent', 'delivered', 'cancelled')");
 $countOrders = $countOrders->fetch(PDO::FETCH_ASSOC)['total_orders'];
 // echo '<pre>';
 // print_r($countOrders);
@@ -58,498 +71,231 @@ if (!empty($_POST)) {
   $updateState->bindValue(':id_order', $_POST['id_order'], PDO::PARAM_INT);
   $updateState->execute();
 
-  header('location: gestion_commande.php');
+  // header('location: gestion_commande.php');
 }
 
-
-
-
-
-
+// code pour afficher un stock actuel pour chaque produit
+// Récupérer les données des produits
+// picture, reference, title, category, size, created, stock
+$selectAllProduct = $connect_db->query("SELECT picture, reference, title, category, size, created, stock FROM product");
+// echo '<pre>';
+// print_r($selectAllProduct);
+// echo '</pre>';
+$dataProducts = $selectAllProduct->fetchAll(PDO::FETCH_ASSOC);
+// echo '<pre>';
+// print_r($dataProducts);
+// echo '</pre>';
 
 
 require_once('include/header.php');
 
 ?>
 
-
-<!DOCTYPE html>
-<html
-  lang="en"
-  class="has-aside-left has-aside-mobile-transition has-navbar-fixed-top has-aside-expanded">
-
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Boutique Admin Dashboard</title>
-
-  <!-- Bulma is included -->
-  <link rel="stylesheet" href="../assets/css/main.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- Bulma is included -->
+<link rel="stylesheet" href="../assets/css/main.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
-  <!-- Fonts -->
-  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-  <link
-    href="https://fonts.googleapis.com/css?family=Nunito"
-    rel="stylesheet"
-    type="text/css" />
+<!-- Fonts -->
+<link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+<link
+  href="https://fonts.googleapis.com/css?family=Nunito"
+  rel="stylesheet"
+  type="text/css" />
 
-  <!-- jQuery (OBLIGATOIRE pour DataTables) -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-  <!-- DataTables JS -->
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-</head>
-
-<body>
-  <div id="app">
+<!-- jQuery (OBLIGATOIRE pour DataTables) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 
-    <section class="section is-title-bar">
-      <div class="level">
-        <div class="level-left">
-          <div class="level-item">
-            <ul>
-              <li>Admin</li>
-              <li>Commandes</li>
-            </ul>
-          </div>
-        </div>
-        <!-- <div class="level-right">
-            <div class="level-item">
-              <div class="buttons is-right">
-                <a
-                  href="https://github.com/vikdiesel/admin-one-bulma-dashboard"
-                  target="_blank"
-                  class="button is-primary"
-                >
-                  <span class="icon"
-                    ><i class="mdi mdi-github-circle"></i
-                  ></span>
-                  <span>GitHub</span>
-                </a>
+<section class="section is-title-bar">
+  <div class="level">
+    <div class="level-left">
+      <div class="level-item">
+        <ul>
+          <li>Admin</li>
+          <li>Commandes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section is-main-section">
+  <div class="card has-table">
+    <header class="card-header">
+      <p class="card-header-title">
+        <span class="icon"><span class="mdi mdi-cart-outline"></span></span>
+        <span>
+          <?php echo "<span style='color: red;'>$countOrders</span> commande" . ($countOrders > 1 ? "s" : ""); ?> en cours de traitement
+        </span>
+      </p>
+      <a href="#" class="card-header-icon">
+        <span class="icon"><i class="mdi mdi-reload"></i></span>
+      </a>
+    </header>
+
+    <div class="card-content">
+      <div class="b-table has-pagination">
+        <div class="table-wrapper has-mobile-cards">
+
+          <table class="table is-fullwidth is-striped is-hoverable">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Customer Number</th>
+                <th>Order Number</th>
+                <th>Order Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($selectAllOrders as $client) : ?>
+                <tr>
+                  <td class="is-checkbox-cell">
+                    <label class="b-checkbox checkbox">
+                      <input type="checkbox" value="false" />
+                      <span class="check"></span>
+                    </label>
+                  </td>
+
+                  <td data-label="Customer number" style="text-align: center;">CUSTOMER<?php echo  $client['user_id'] ?></td>
+                  <td data-label="Order number" style="text-align: center;"> <span style="font-weight: bold; color: blue;"> FAMMS<?php echo $client['id_order'] ?></span></td>
+                  <td data-label="Order date"><?php echo date('d/m/Y H:i', strtotime($client['date'])) ?></td>
+                  <td data-label="Amount" style="text-align: right;"><span style="font-weight: bold; color: red;"><?php echo $client['rising'] ?></span> €</td>
+
+                  <td data-label="Order status" style="text-align: center;">
+                    <form action="" method="post" style="display: flex; align-items: center;">
+                      <input type="hidden" name="id_order" value="<?php echo $client['id_order'] ?>">
+                      <div class="select" style="margin-right: 10px;">
+                        <select class="small-select" style="height: 40px;" name="state">
+                          <option value="treatment" <?php echo $client['state'] == 'treatment' ? 'selected' : '' ?>>Treatment</option>
+                          <option value="sent" <?php echo $client['state'] == 'sent' ? 'selected' : '' ?>>Sent</option>
+                          <option value="delivered" <?php echo $client['state'] == 'delivered' ? 'selected' : '' ?>>Delivered</option>
+                          <option value="cancelled" <?php echo $client['state'] == 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                        </select>
+                      </div>
+                      <button type="submit" class="button is-success is-small" title="Valider">
+                        <i class="fa-solid fa-circle-check"></i>
+                      </button>
+                    </form>
+                  </td>
+
+                  <td data-label="Firstname"><?php echo $client['firstName'] ?></td>
+                  <td data-label="Lastname"><?php echo strtoupper($client['lastName']) ?></td>
+                  <td data-label="Email"><?php echo $client['email'] ?></td>
+                  <td data-label="Phone"><?php echo $client['phone'] ?></td>
+
+                  <td class="is-actions-cell">
+                    <div class="buttons is-right">
+                      <!-- Lien vers la modale de chaque commande -->
+                      <a href="#" class="button is-small is-primary jb-modal-trigger" data-target="modal-<?php echo $client['id_order'] ?>">
+                        <span class="icon"><span class="mdi mdi-eye"></span></span>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+
+          <!-- Modales après le tableau -->
+          <?php foreach ($selectAllOrders as $client) : ?>
+            <div id="modal-<?php echo $client['id_order']; ?>" class="modal">
+              <div class="modal-background jb-modal-close"></div>
+              <div class="modal-card">
+                <header class="modal-card-head">
+                  <p class="modal-card-title">
+                    <strong>Détail de la commande n°= <span style="color: red;"><?php echo $client['id_order']; ?></span> de <span style="color: blue;"><?php echo $client['firstName'] . ' ' . strtoupper($client['lastName']); ?></span></strong>
+                  </p>
+                  <p class="modal-card-title">
+                    <strong> Montant total : <span style="color:red;"><?php echo $client['rising']; ?></span> €</strong>
+                  </p>
+                  <button class="delete jb-modal-close" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                  <?php
+                  $orderDetails = $connect_db->query(
+                    "
+          SELECT product.picture, product.reference, product.price, order_details.quantity, (product.price * order_details.quantity) as total
+          FROM order_details
+          INNER JOIN product ON order_details.product_id = product.id_product
+          WHERE order_details.order_id = " . $client['id_order']
+                  );
+                  $orderDetails = $orderDetails->fetchAll(PDO::FETCH_ASSOC); ?>
+                  <table class="table is-fullwidth is-striped is-hoverable">
+                    <thead>
+                      <tr>
+                        <th>Photo</th>
+                        <th>Reference</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Current stock</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($orderDetails as $detail) : ?>
+                        <tr>
+                          <td><img src="<?php echo $detail['picture']; ?>" alt="Product Photo" style="width: 50px; height: 50px;"></td>
+                          <td><?php echo $detail['reference']; ?></td>
+                          <td><?php echo $detail['price']; ?> €</td>
+                          <td><?php echo $detail['quantity']; ?></td>
+                          <td><?php echo $detail['total']; ?> €</td>
+                          <!-- Afficher un stock actuel avec $dataProducts -->
+                          <?php foreach ($dataProducts as $currentStock) : ?>
+                            <?php if ($detail['reference'] == $currentStock['reference']) : ?>
+                              <td><span style="font-weight: bold; color: red;"><?php echo $currentStock['stock']; ?></span></td>
+                            <?php endif; ?>
+                          <?php endforeach; ?>
+
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
+                </section>
+                <footer class="modal-card-foot">
+                  <button class="button jb-modal-close">Quitter</button>
+                </footer>
               </div>
             </div>
-          </div> -->
-      </div>
-    </section>
-    <section class="section is-main-section">
-      <!-- <div class="notification is-primary">
-        <button class="delete"></button>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-      </div> -->
-      <div class="card has-table">
-        <header class="card-header">
-          <p class="card-header-title">
-            <span class="icon"><span class="mdi mdi-cart-outline"></span>
-              <!-- Afficher les commandes le nombres de commande présentes dans BDD -->
-            </span>
+          <?php endforeach; ?>
 
-            <span> <?php echo "<span style='color: red;'>$countOrders </span> commande" . ($countOrders > 1 ? "s" : ""); ?> en cours de traitement</span>
+          <!-- Script JavaScript pour gérer l'ouverture et la fermeture des modales -->
+          <script>
+            document.addEventListener('DOMContentLoaded', () => {
+              const modalTriggers = document.querySelectorAll('.jb-modal-trigger');
+              const modals = document.querySelectorAll('.modal');
 
-          </p>
-          <a href="#" class="card-header-icon">
-            <span class="icon"><i class="mdi mdi-reload"></i></span>
-          </a>
-        </header>
-        <div class="card-content">
-          <div class="b-table has-pagination">
-            <div class="table-wrapper has-mobile-cards">
-              <table id="table-clients"
-                class="table is-fullwidth is-striped is-hoverable is-fullwidth">
-                <thead>
-                  <tr>
-                    <th class="is-checkbox-cell">
-                      <!-- <label class="b-checkbox checkbox">
-                        <input type="checkbox" value="false" />
-                        <span class="check"></span>
-                      </label> -->
-                    </th>
-
-                    <!-- <th></th> -->
-                    <th>Customer number</th>
-                    <th>Order number</th>
-                    <th>Order date</th>
-                    <th>Amount</th>
-                    <th>Order status</th>
-                    <th>Firstname</th>
-                    <th>Lastname</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-
-                  <!-- Boucle foreach -->
-
-                  <?php foreach ($selectAllClients as $client) : ?>
-                    <tr>
-                      <td class="is-checkbox-cell">
-                        <label class="b-checkbox checkbox">
-                          <input type="checkbox" value="false" />
-                          <span class="check"></span>
-                        </label>
-                      </td>
-                      <style>
-                        tr {
-                          height: 60px;
-                          vertical-align: middle;
-                        }
-                      </style>
-                      <td data-label="Customer number" style="text-align: center;">CUSTOMER<?php echo  $client['user_id'] ?></td>
-                      <td data-label="Order number" style="text-align: center;"> <span style="font-weight: bold; color: blue;"> FAMMS<?php echo $client['id_order'] ?></td>
-                      <td data-label="Order date"><?php echo date('d/m/Y H:i', strtotime($client['date'])) ?></td>
-                      <td data-label="Amount" style="text-align: right;"><span style="font-weight: bold; color: red;"><?php echo $client['rising'] ?></span> €</td>
-
-                      <td data-label="Order status" style="text-align: center;">
-
-                        <form action="" method="post" style="display: flex; align-items: center;">
-                          <input type="hidden" name="id_order" value="<?php echo $client['id_order'] ?>">
-                          <div class="select" style="margin-right: 10px;">
-                            <select class="small-select" style="height: 20px;" name="state">
-                              <option value="treatment" <?php echo $client['state'] == 'treatment' ? 'selected' : '' ?>>Treatment</option>
-                              <option value="sent" <?php echo $client['state'] == 'sent' ? 'selected' : '' ?>>Sent</option>
-                              <option value="delivered" <?php echo $client['state'] == 'delivered' ? 'selected' : '' ?>>Delivered</option>
-                            </select>
-                          </div>
-                          <button type="submit" class="button is-success is-small" title="Valider">
-                            <i class="fa-solid fa-circle-check"></i>
-                          </button>
-                        </form>
-
-                      </td>
-                      <!-- <td data-label="Order status" style="text-align: center;"><?php echo $client['state'] ?></td> -->
-
-                      <td data-label="Firstname"><?php echo $client['firstName'] ?></td>
-                      <td data-label="Lastname"><?php echo strtoupper($client['lastName']) ?></td>
-                      <td data-label="Email"><?php echo $client['email'] ?></td>
-                      <td data-label="Phone"><?php echo $client['phone'] ?></td>
-
-
-
-                      <td class="is-actions-cell">
-                        <div class="buttons is-right">
-                          <button
-                            class="button is-small is-primary"
-                            type="button">
-                            <span class="icon"><i class="mdi mdi-eye"></i></span>
-                          </button>
-
-                          <button
-                            class="button is-small is-danger jb-modal"
-                            data-target="sample-modal"
-                            type="button">
-                            <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                          </button>
-
-                        </div>
-                      </td>
-                    </tr>
-                  <?php endforeach; ?>
-
-                </tbody>
-              </table>
-
-              <script>
-                $(document).ready(function() {
-                  $("#table-clients").DataTable({
-                    language: {
-                      url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json",
-                    },
-                    aoColumnDefs: [{
-                      bSortable: false,
-                      aTargets: [0, 10],
-                    }, ],
-                  });
+              modalTriggers.forEach(trigger => {
+                trigger.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  const modalId = this.getAttribute('data-target');
+                  const modal = document.getElementById(modalId);
+                  modal.classList.add('is-active');
                 });
-              </script>
+              });
 
-            </div>
-            <!-- <div class="notification">
-                <div class="level">
-                  <div class="level-left">
-                    <div class="level-item">
-                      <div class="buttons has-addons">
-                        <button type="button" class="button is-active">
-                          1
-                        </button>
-                        <button type="button" class="button">2</button>
-                        <button type="button" class="button">3</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="level-right">
-                    <div class="level-item">
-                      <small>Page 1 of 3</small>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- <section class="section is-main-section">
-      <div class="card has-table">
-        <header class="card-header">
-          <p class="card-header-title">
-            <span class="icon"><span class="mdi mdi-cart-arrow-down"></span>
-            </span>
-            Détails commande
-          </p>
-          <a href="#" class="card-header-icon">
-            <span class="icon"><i class="mdi mdi-reload"></i></span>
-          </a>
-        </header>
-        <div class="card-content">
-          <div class="b-table has-pagination">
-            <div class="table-wrapper has-mobile-cards">
-              <table
-                class="table is-fullwidth is-striped is-hoverable is-fullwidth">
-                <thead>
-                  <tr>
-                    <th class="is-checkbox-cell">
-                      <label class="b-checkbox checkbox">
-                        <input type="checkbox" value="false" />
-                        <span class="check"></span>
-                      </label>
-                    </th>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Company</th>
-                    <th>City</th>
-                    <th>Progress</th>
-                    <th>Created</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="is-checkbox-cell">
-                      <label class="b-checkbox checkbox">
-                        <input type="checkbox" value="false" />
-                        <span class="check"></span>
-                      </label>
-                    </td>
-                    <td class="is-image-cell">
-                      <div class="image">
-                        <img
-                          src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg"
-                          class="is-rounded" />
-                      </div>
-                    </td>
-                    <td data-label="Name">Rebecca Bauch</td>
-                    <td data-label="Company">Daugherty-Daniel</td>
-                    <td data-label="City">South Cory</td>
-                    <td data-label="Progress" class="is-progress-cell">
-                      <progress
-                        max="100"
-                        class="progress is-small is-primary"
-                        value="79">
-                        79
-                      </progress>
-                    </td>
-                    <td data-label="Created">
-                      <small
-                        class="has-text-grey is-abbr-like"
-                        title="Oct 25, 2020">Oct 25, 2020</small>
-                    </td>
-                    <td class="is-actions-cell">
-                      <div class="buttons is-right">
-                        <button
-                          class="button is-small is-primary"
-                          type="button">
-                          <span class="icon"><i class="mdi mdi-eye"></i></span>
-                        </button>
-                        <button
-                          class="button is-small is-danger jb-modal"
-                          data-target="sample-modal"
-                          type="button">
-                          <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div> -->
-    <!-- <div class="notification">
-                <div class="level">
-                  <div class="level-left">
-                    <div class="level-item">
-                      <div class="buttons has-addons">
-                        <button type="button" class="button is-active">
-                          1
-                        </button>
-                        <button type="button" class="button">2</button>
-                        <button type="button" class="button">3</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="level-right">
-                    <div class="level-item">
-                      <small>Page 1 of 3</small>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-    <!-- </div>
-        </div>
-      </div>
-    </section> -->
+              modals.forEach(modal => {
+                modal.querySelector('.jb-modal-close').addEventListener('click', () => {
+                  modal.classList.remove('is-active');
+                });
+              });
+            });
+          </script>
 
 
 
-    <section class="section is-main-section">
-      <div class="card">
-        <header class="card-header">
-          <p class="card-header-title">
-            <span class="icon"><i class="mdi mdi-ballot"></i></span>
-            Modification commande
-          </p>
-        </header>
-        <div class="card-content">
-          <form method="get">
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">From</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <p class="control is-expanded has-icons-left">
-                    <input class="input" type="text" placeholder="Name" />
-                    <span class="icon is-small is-left"><i class="mdi mdi-account"></i></span>
-                  </p>
-                </div>
-                <div class="field">
-                  <p
-                    class="control is-expanded has-icons-left has-icons-right">
-                    <input
-                      class="input is-success"
-                      type="email"
-                      placeholder="Email"
-                      value="alex@smith.com" />
-                    <span class="icon is-small is-left"><i class="mdi mdi-mail"></i></span>
-                    <span class="icon is-small is-right"><i class="mdi mdi-check"></i></span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="field is-horizontal">
-              <div class="field-label"></div>
-              <div class="field-body">
-                <div class="field is-expanded">
-                  <div class="field has-addons">
-                    <p class="control">
-                      <a class="button is-static">+33</a>
-                    </p>
-                    <p class="control is-expanded">
-                      <input
-                        class="input"
-                        type="tel"
-                        placeholder="Your phone number" />
-                    </p>
-                  </div>
-                  <p class="help">Do not enter the first zero</p>
-                </div>
-              </div>
-            </div>
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">Department</label>
-              </div>
-              <div class="field-body">
-                <div class="field is-narrow">
-                  <div class="control">
-                    <div class="select is-fullwidth">
-                      <select>
-                        <option>Business development</option>
-                        <option>Marketing</option>
-                        <option>Sales</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">Subject</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <input
-                      class="input is-danger"
-                      type="text"
-                      placeholder="e.g. Partnership opportunity" />
-                  </div>
-                  <p class="help is-danger">This field is required</p>
-                </div>
-              </div>
-            </div>
 
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">Question</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <textarea
-                      class="textarea"
-                      placeholder="Explain how we can help you"></textarea>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="field is-horizontal">
-              <div class="field-label">
-                <label class="label">Switch</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <label class="switch is-rounded"><input type="checkbox" value="false" />
-                    <span class="check"></span>
-                    <span class="control-label">Default</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div class="field is-horizontal">
-              <div class="field-label">
-                <!-- Left empty for spacing -->
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="field is-grouped">
-                    <div class="control">
-                      <button type="submit" class="button is-primary">
-                        <span>Submit</span>
-                      </button>
-                    </div>
-                    <div class="control">
-                      <button
-                        type="button"
-                        class="button is-primary is-outlined">
-                        <span>Reset</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </section>
 
-    <?php
-    require_once('include/footer.php');
-    ?>
+          <?php
+          require_once('include/footer.php');
+          ?>

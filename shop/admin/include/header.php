@@ -55,17 +55,15 @@ if (isset($_SESSION['user'])) {
       window.location.href = "<?php echo $_SERVER['PHP_SELF']; ?>?logout=true";
     }
   </script>
-</head>
+  <!-- Bulma is included -->
+  <link rel="stylesheet" href="../assets/css/main.min.css" />
 
-<!-- Bulma is included -->
-<link rel="stylesheet" href="../assets/css/main.min.css" />
-
-<!-- Fonts -->
-<link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-<link
-  href="https://fonts.googleapis.com/css?family=Nunito"
-  rel="stylesheet"
-  type="text/css" />
+  <!-- Fonts -->
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Nunito"
+    rel="stylesheet"
+    type="text/css" />
 </head>
 
 <body>
@@ -121,11 +119,10 @@ if (isset($_SESSION['user'])) {
       </div>
     </nav>
 
-    <!-- <?php
-          echo '<pre>';
-          print_r($_SERVER);
-          echo '</pre>';
-          ?> -->
+
+
+
+
 
     <aside class="aside is-placed-left is-expanded">
       <div class="aside-tools">

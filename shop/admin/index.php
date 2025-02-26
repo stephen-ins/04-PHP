@@ -65,6 +65,9 @@ $mostPopularProductOrder = $connect_db->query("SELECT product_id, SUM(quantity) 
   ORDER BY total_quantity DESC 
   LIMIT 1");
 $mostPopularProduct = $mostPopularProductOrder->fetch(PDO::FETCH_ASSOC);
+// echo '<pre>';
+// print_r($mostPopularProduct);
+// echo '</pre>';
 
 // Récupérer les informations du produit le plus populaire (picture et title)
 $mostPopularProductInfo = $connect_db->query("SELECT picture, title FROM product WHERE id_product = " . $mostPopularProduct['product_id']);
@@ -77,6 +80,9 @@ $leastPopularProductOrder = $connect_db->query("SELECT product_id, SUM(quantity)
   ORDER BY total_quantity ASC 
   LIMIT 1");
 $leastPopularProduct = $leastPopularProductOrder->fetch(PDO::FETCH_ASSOC);
+// echo '<pre>';
+// print_r($leastPopularProduct);
+// echo '</pre>';
 
 // Récupérer les informations du produit le moins populaire (picture et title)
 $leastPopularProductInfo = $connect_db->query("SELECT picture, title FROM product WHERE id_product = " . $leastPopularProduct['product_id']);
@@ -210,6 +216,7 @@ require_once('include/header.php');
         <div class="level-item" style="flex: 1;">
           <div class="is-widget-label" style="text-align: center;">
             <h3 class="subtitle is-spaced" style="text-align: center; margin-bottom: 2cm; text-decoration: underline; color: black;">Best selling product</h3>
+            <h2 class="m-5 title">Products sold : <span style="color: green; font-weight: bold;"><?php echo $mostPopularProduct['total_quantity'] ?></span></h2>
             <img src="<?php echo $mostPopularProductInfo['picture'] ?>" alt="" style="max-width: 40%;">
             <h1 class="m-5 title"><?php echo $mostPopularProductInfo['title'] ?></h1>
           </div>
@@ -225,6 +232,7 @@ require_once('include/header.php');
         <div class="level-item" style="flex: 1;">
           <div class="is-widget-label" style="text-align: center;">
             <h3 class="subtitle is-spaced" style="text-align: center; margin-bottom: 2cm; text-decoration: underline; color: black">Least selling product</h3>
+            <h2 class="m-5 title">Products sold : <span style="color: red; font-weight: bold;"><?php echo $leastPopularProduct['total_quantity'] ?></span></h2>
             <img src="<?php echo $leastPopularProductInfo['picture'] ?>" alt="" style="max-width: 40%;">
             <h1 class="m-5 title"><?php echo $leastPopularProductInfo['title'] ?></h1>
           </div>

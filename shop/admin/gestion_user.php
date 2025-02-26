@@ -37,6 +37,20 @@ $dataAdmin = $connect_db->query("SELECT *, DATE_FORMAT(created, '%d/%m/%Y') AS c
 $dataAdmin = $dataAdmin->fetchAll(PDO::FETCH_ASSOC);
 
 
+// Récupération des données clients à insérer dans une modale
+$dataClient = $connect_db->query("SELECT * FROM user WHERE roles = 'user'");
+$dataClient = $dataClient->fetchAll(PDO::FETCH_ASSOC);
+// echo '<pre>';
+// print_r($dataClient);
+// echo '</pre>';
+
+// Boucle pour afficher les commandes du client
+$orderData = $connect_db->query("SELECT * FROM `order` INNER JOIN user ON order.user_id = user.id_user");
+$orderData = $orderData->fetchAll(PDO::FETCH_ASSOC);
+// echo '<pre>';
+// print_r($orderData);
+// echo '</pre>';
+
 
 
 
@@ -130,15 +144,64 @@ require_once('include/header.php');
                   <td data-label="Created"><?php echo $user['created']; ?></td>
                   <td class="is-actions-cell">
                     <div class="buttons is-right">
-                      <button class="button is-small is-primary" type="button">
+                      <button
+                        type="button"
+                        class="button is-small is-primary jb-modal"
+                        data-target="sample-modal-<?= $user['id_user'] ?>">
                         <span class="icon"><i class="mdi mdi-eye"></i></span>
                       </button>
                     </div>
                   </td>
                 </tr>
+
               <?php endforeach; ?>
             </tbody>
           </table>
+          <!-- Affichage des données clients et des commandes en cours -->
+          <?php foreach ($dataClient as $client) : ?>
+            <div id="sample-modal-<?= $client['id_user'] ?>" class="modal">
+              <div class="modal-background jb-modal-close"></div>
+              <div class="modal-card">
+                <header class="modal-card-head">
+
+                  <button class="delete jb-modal-close" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                  <div class="columns">
+                    <div class="column">
+                      <p><strong>Order in progress:</strong></p>
+                      <p><strong>Customer:</strong></p>
+                      <p><strong>Email:</strong></p>
+                      <p><strong>Phone:</strong></p>
+                      <p><strong>City:</strong></p>
+                      <p><strong>Zipcode:</strong></p>
+                      <p><strong>Address:</strong></p>
+                      <p><strong>Created:</strong></p>
+                    </div>
+                    <div class="column">
+                      <?php foreach ($orderData as $order) : ?>
+                        <?php if ($order['user_id'] == $client['id_user']) : ?>
+                          <p><strong style="color: red;"><?= 'FAMMS' . $order['id_order'] ?></strong></p>
+                        <?php endif; ?>
+                      <?php endforeach; ?>
+                      <p><?= 'CUSTOMER' . $client['id_user'] ?></p>
+                      <p><?= $client['email'] ?></p>
+                      <p><?= $client['phone'] ?></p>
+                      <p><?= $client['city'] ?></p>
+                      <p><?= $client['zipcode'] ?></p>
+                      <p><?= $client['address'] ?></p>
+                      <p><?= $client['created'] ?></p>
+                    </div>
+                  </div>
+                </section>
+                <footer class="modal-card-foot">
+                  <button class="button jb-modal-close">Fermer</button>
+                </footer>
+              </div>
+              <button class="modal-close is-large jb-modal-close" aria-label="close"></button>
+            </div>
+          <?php endforeach; ?>
+
 
           <script>
             $(document).ready(function() {
@@ -207,7 +270,7 @@ require_once('include/header.php');
                 <th>Phone</th>
                 <th>City</th>
                 <th>Account created</th>
-                <th>Actions</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -217,9 +280,11 @@ require_once('include/header.php');
 
                   <td class="is-image-cell">
                     <div class="image">
-                      <img
-                        src="<?php echo ($user['gender'] == 'female') ? '../assets/images-famma/portrait_femme.jpg' : '../assets/images-famma/portrait_homme.jpg'; ?>"
-                        class="" />
+
+                      <div class="image">
+                        <img src="<?php echo ($user['gender'] == 'female') ? '../assets/images-famma/portrait_femme.jpg' : '../assets/images-famma/portrait_homme.jpg'; ?>" />
+                      </div>
+
                     </div>
                   </td>
 
@@ -235,15 +300,24 @@ require_once('include/header.php');
 
                   <td class="is-actions-cell">
                     <div class="buttons is-right">
-                      <button
+                      <!-- <button
                         class="button is-small is-primary"
                         type="button">
                         <span class="icon"><i class="mdi mdi-eye"></i></span>
-                      </button>
+                      </button> -->
+
+
+
+
+
 
                     </div>
                   </td>
                 </tr>
+
+
+
+
               <?php endforeach; ?>
 
             </tbody>
@@ -289,151 +363,7 @@ require_once('include/header.php');
   </div>
 </section>
 
-<!-- <section class="section is-main-section">
-  <div class="card">
-    <header class="card-header">
-      <p class="card-header-title">
-        <span class="icon"><i class="mdi mdi-ballot"></i></span>
-        Modification utilisateur
-      </p>
-    </header>
-    <div class="card-content">
-      <form method="get">
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">From</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <p class="control is-expanded has-icons-left">
-                <input class="input" type="text" placeholder="Name" />
-                <span class="icon is-small is-left"><i class="mdi mdi-account"></i></span>
-              </p>
-            </div>
-            <div class="field">
-              <p
-                class="control is-expanded has-icons-left has-icons-right">
-                <input
-                  class="input is-success"
-                  type="email"
-                  placeholder="Email"
-                  value="alex@smith.com" />
-                <span class="icon is-small is-left"><i class="mdi mdi-mail"></i></span>
-                <span class="icon is-small is-right"><i class="mdi mdi-check"></i></span>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="field is-horizontal">
-          <div class="field-label"></div>
-          <div class="field-body">
-            <div class="field is-expanded">
-              <div class="field has-addons">
-                <p class="control">
-                  <a class="button is-static">+33</a>
-                </p>
-                <p class="control is-expanded">
-                  <input
-                    class="input"
-                    type="tel"
-                    placeholder="Your phone number" />
-                </p>
-              </div>
-              <p class="help">Do not enter the first zero</p>
-            </div>
-          </div>
-        </div>
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">Department</label>
-          </div>
-          <div class="field-body">
-            <div class="field is-narrow">
-              <div class="control">
-                <div class="select is-fullwidth">
-                  <select>
-                    <option>Business development</option>
-                    <option>Marketing</option>
-                    <option>Sales</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">Subject</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <input
-                  class="input is-danger"
-                  type="text"
-                  placeholder="e.g. Partnership opportunity" />
-              </div>
-              <p class="help is-danger">This field is required</p>
-            </div>
-          </div>
-        </div>
 
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">Question</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <textarea
-                  class="textarea"
-                  placeholder="Explain how we can help you"></textarea>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="field is-horizontal">
-          <div class="field-label">
-            <label class="label">Switch</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <label class="switch is-rounded"><input type="checkbox" value="false" />
-                <span class="check"></span>
-                <span class="control-label">Default</span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <hr />
-        <div class="field is-horizontal">
-          <div class="field-label"> -->
-
-<!-- Left empty for spacing -->
-<!-- </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="field is-grouped">
-                <div class="control">
-                  <button type="submit" class="button is-primary">
-                    <span>Submit</span>
-                  </button>
-                </div>
-                <div class="control">
-                  <button
-                    type="button"
-                    class="button is-primary is-outlined">
-                    <span>Reset</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-</section> -->
 
 <?php
 require_once('include/footer.php');

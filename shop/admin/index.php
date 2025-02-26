@@ -57,22 +57,45 @@ $dataProducts = array_map(function ($product) {
   return $product;
 }, $dataProducts);
 
-// Récupérer le produit le plus vendu du mois
-$selectBestProduct = $connect_db->query("SELECT product_id, SUM(quantity) AS total_quantity FROM `order_details` GROUP BY product_id ORDER BY total_quantity DESC LIMIT 1");
+
+// Récupérer le produit le plus populaire (le plus vendu)
+$mostPopularProductOrder = $connect_db->query("SELECT product_id, SUM(quantity) as total_quantity 
+  FROM order_details 
+  GROUP BY product_id 
+  ORDER BY total_quantity DESC 
+  LIMIT 1");
+$mostPopularProduct = $mostPopularProductOrder->fetch(PDO::FETCH_ASSOC);
+
+// Récupérer les informations du produit le plus populaire (picture et title)
+$mostPopularProductInfo = $connect_db->query("SELECT picture, title FROM product WHERE id_product = " . $mostPopularProduct['product_id']);
+$mostPopularProductInfo = $mostPopularProductInfo->fetch(PDO::FETCH_ASSOC);
+
+// Récupérer le produit le moins populaire (moins vendu)
+$leastPopularProductOrder = $connect_db->query("SELECT product_id, SUM(quantity) as total_quantity 
+  FROM order_details 
+  GROUP BY product_id 
+  ORDER BY total_quantity ASC 
+  LIMIT 1");
+$leastPopularProduct = $leastPopularProductOrder->fetch(PDO::FETCH_ASSOC);
+
+// Récupérer les informations du produit le moins populaire (picture et title)
+$leastPopularProductInfo = $connect_db->query("SELECT picture, title FROM product WHERE id_product = " . $leastPopularProduct['product_id']);
+$leastPopularProductInfo = $leastPopularProductInfo->fetch(PDO::FETCH_ASSOC);
+
+// Récupérer le nombre total de produits vendus
+$totalProductsSoldQuery = $connect_db->query("SELECT SUM(quantity) as total_sold FROM order_details");
+$totalProductsSold = $totalProductsSoldQuery->fetch(PDO::FETCH_ASSOC)['total_sold'];
 // echo '<pre>';
-// print_r($selectBestProduct);
-// echo '</pre>';
-$bestProduct = $selectBestProduct->fetch(PDO::FETCH_ASSOC);
-// echo '<pre>';
-// print_r($bestProduct);
+// print_r($totalProductsSold);
 // echo '</pre>';
 
-// Récupérer les informations du produit le plus vendu( picture et title)
-$bestProductInfo = $connect_db->query("SELECT picture, title FROM product");
-$bestProductInfo = $bestProductInfo->fetch(PDO::FETCH_ASSOC);
+// Récupérer le nombre total de commandes passées
+$totalOrdersQuery = $connect_db->query("SELECT COUNT(*) as total_orders FROM `order`");
+$totalOrders = $totalOrdersQuery->fetch(PDO::FETCH_ASSOC)['total_orders'];
 // echo '<pre>';
-// print_r($bestProductInfo);
+// print_r($totalOrders);
 // echo '</pre>';
+
 
 
 
@@ -119,21 +142,34 @@ require_once('include/header.php');
 <div class="tile is-parent is- is-vertical is-align-items-center">
   <div class="card tile is-child" style="width: 100%;">
     <div class="card-content">
-
       <div class="level is-mobile">
         <!-- Affichage du produit le plus vendu -->
-
-        <div class="level-item">
-          <div class="is-widget-label" style="text-align: center; width: 100%;">
-            <h3 class="subtitle is-spaced" style="text-align: left;">Best selling product</h3>
-            <img src="<?php echo $bestProductInfo['picture'] ?>" alt="" style="max-width: 70%;">
-            <h1 class="m-5 title"><?php echo $bestProductInfo['title'] ?></h1>
+        <div class="level-item" style="flex: 1;">
+          <div class="is-widget-label" style="text-align: center;">
+            <h3 class="subtitle is-spaced" style="text-align: center; margin-bottom: 2cm; text-decoration: underline; color: lightgray;">Best selling product</h3>
+            <img src="<?php echo $mostPopularProductInfo['picture'] ?>" alt="" style="max-width: 40%;">
+            <h1 class="m-5 title"><?php echo $mostPopularProductInfo['title'] ?></h1>
           </div>
+        </div>
 
-          <div class="level-item has-widget-icon">
-            <div class="is-widget-icon">
-              <span class="icon has-text-success is-large" style="font-size: 64px;"><i class="mdi mdi-finance mdi-192px"></i></span>
-            </div>
+        <div class="level-item has-widget-icon" style="flex: 0;">
+          <div class="is-widget-icon">
+            <span class="icon has-text-success is-large" style="font-size: 64px;"><i class="mdi mdi-arrow-up-bold mdi-192px"></i></span>
+          </div>
+        </div>
+
+        <!-- Affichage du produit le moins vendu -->
+        <div class="level-item" style="flex: 1;">
+          <div class="is-widget-label" style="text-align: center;">
+            <h3 class="subtitle is-spaced" style="text-align: center; margin-bottom: 2cm; text-decoration: underline; color: lightgray">Least selling product</h3>
+            <img src="<?php echo $leastPopularProductInfo['picture'] ?>" alt="" style="max-width: 40%;">
+            <h1 class="m-5 title"><?php echo $leastPopularProductInfo['title'] ?></h1>
+          </div>
+        </div>
+
+        <div class="level-item has-widget-icon" style="flex: 0;">
+          <div class="is-widget-icon">
+            <span class="icon has-text-danger is-large" style="font-size: 64px;"><i class="mdi mdi-arrow-down-bold mdi-192px"></i></span>
           </div>
         </div>
       </div>
@@ -178,6 +214,48 @@ require_once('include/header.php');
             </div>
             <div class="level-item has-widget-icon">
               <div class="is-widget-icon">
+                <span class="icon has-text-info is-large"><i class="mdi mdi-finance mdi-48px"></i></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section is-main-section">
+  <div class="tile is-ancestor">
+    <div class="tile is-parent">
+      <div class="card tile is-child">
+        <div class="card-content">
+          <div class="level is-mobile">
+            <div class="level-item">
+              <div class="is-widget-label">
+                <h3 class="subtitle is-spaced">Number of products sold</h3>
+                <h1 class="title"><?php echo $totalProductsSold ?></h1>
+              </div>
+            </div>
+            <div class="level-item has-widget-icon">
+              <div class="is-widget-icon">
+                <span class="icon has-text-primary is-large"><i class="mdi mdi-cart-outline mdi-48px"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tile is-parent">
+      <div class="card tile is-child">
+        <div class="card-content">
+          <div class="level is-mobile">
+            <div class="level-item">
+              <div class="is-widget-label">
+                <h3 class="subtitle is-spaced">Number of orders placed</h3>
+                <h1 class="title"><?php echo $totalOrders ?></h1>
+              </div>
+            </div>
+            <div class="level-item has-widget-icon">
+              <div class="is-widget-icon">
                 <span class="icon has-text-info is-large"><i class="mdi mdi-cart-outline mdi-48px"></i></span>
               </div>
             </div>
@@ -185,12 +263,7 @@ require_once('include/header.php');
         </div>
       </div>
     </div>
-
-
-
-
-
-
+  </div>
 </section>
 
 
@@ -248,7 +321,7 @@ require_once('include/header.php');
                 <td data-label="Category"><?php echo $product['category']; ?></td>
                 <td data-label="Size"><?php echo $product['size']; ?></td>
                 <td data-label="Date entered"><?php echo $product['created']; ?></td>
-                <td data-label="Stock"><?php echo $product['stock']; ?></td>
+                <td data-label="Stock"><strong style="color: red;"><?php echo $product['stock']; ?></strong></td>
 
 
                 <td class="is-actions-cell">
@@ -282,32 +355,12 @@ require_once('include/header.php');
         </script>
 
       </div>
-      <!-- <div class="notification">
-                <div class="level">
-                  <div class="level-left">
-                    <div class="level-item">
-                      <div class="buttons has-addons">
-                        <button type="button" class="button is-active">
-                          1
-                        </button>
-                        <button type="button" class="button">2</button>
-                        <button type="button" class="button">3</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="level-right">
-                    <div class="level-item">
-                      <small>Page 1 of 3</small>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
+
     </div>
   </div>
-</div>
 
 
-<?php
-require_once('include/footer.php');
+  <?php
+  require_once('include/footer.php');
 
-?>
+  ?>

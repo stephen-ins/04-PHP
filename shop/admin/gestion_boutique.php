@@ -13,16 +13,51 @@ if (!adminConnected()) {
 }
 
 // Suppression du produit
-if (isset($_GET['action']) && $_GET['action'] == 'delete') {
 
-  $data = $connect_db->prepare('DELETE FROM product WHERE id_product = :id');
-  $data->bindValue(':id', $_GET['id'], PDO::PARAM_INT);
-  $data->execute();
+// if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
+//   $data = $connect_db->prepare('DELETE FROM product WHERE id_product = :id');
+//   $data->bindValue(':id', $_GET['id'], PDO::PARAM_INT);
+//   $data->execute();
 
-  $_SESSION['msgValidation'] = "Le produit a été supprimé avec succès";
+//   $_SESSION['msgValidation'] = "Le produit a été supprimé avec succès";
+//   $_SESSION['msg'] = true;
+
+//   header('location: gestion_boutique.php');
+//   exit();
+// }
+
+
+// Suppression du produit
+if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
+  $productId = $_GET['id'];
+
+  // Commencez une transaction
+  $connect_db->beginTransaction();
+
+  try {
+    // Supprimer les enregistrements dans order_details liés au produit
+    $deleteOrderDetails = $connect_db->prepare('DELETE FROM order_details WHERE product_id = :id');
+    $deleteOrderDetails->bindValue(':id', $productId, PDO::PARAM_INT);
+    $deleteOrderDetails->execute();
+
+    // Supprimer le produit
+    $deleteProduct = $connect_db->prepare('DELETE FROM product WHERE id_product = :id');
+    $deleteProduct->bindValue(':id', $productId, PDO::PARAM_INT);
+    $deleteProduct->execute();
+
+    // Validez la transaction
+    $connect_db->commit();
+
+    $_SESSION['msgValidation'] = "Le produit a été supprimé avec succès";
+  } catch (Exception $e) {
+    // Annulez la transaction en cas d'erreur
+    $connect_db->rollBack();
+    $_SESSION['msgValidation'] = "Erreur lors de la suppression du produit : " . $e->getMessage();
+  }
+
   $_SESSION['msg'] = true;
-
   header('location: gestion_boutique.php');
+  exit();
 }
 
 
@@ -100,6 +135,12 @@ if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
   if (isset($_GET['action']) && $_GET['action'] == 'update') {
     $data = $connect_db->prepare('UPDATE product SET reference = :reference, category = :category, title = :title, color = :color, size = :size, description = :description, price = :price, stock = :stock, picture = :picture, public = :public WHERE id_product = :id');
     $data->bindValue(':id', $_GET['id'], PDO::PARAM_INT);
+
+
+
+
+
+
 
     $_SESSION['msgValidation'] = "Les modifications du produit ont été effectuées avec succès";
   } else {

@@ -86,12 +86,13 @@ include '../includes/navbar.php';
       </div>
 
       <div class="text-center">
-        <a href="inscription.php" class="text-blue-600 hover:underline mt-4 block">Pas encore inscrit ? S'inscrire</a>
-
-        <!-- <a href="mot_de_passe_oublie.php" class="text-blue-600 hover:underline">Mot de passe oublié?</a> -->
+        <span class="text-black">Pas encore inscrit ? </span><a href="inscription.php" class="text-blue-600 hover:underline mt-4"> S'inscrire</a>
       </div>
-    </form>
+
+      <!-- <a href="mot_de_passe_oublie.php" class="text-blue-600 hover:underline">Mot de passe oublié?</a> -->
   </div>
+  </form>
+</div>
 </div>
 
 

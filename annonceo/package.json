@@ -1,0 +1,21 @@
+{
+  "name": "mon-projet-tailwind",
+  "version": "1.0.0",
+  "description": "Un projet utilisant Tailwind CSS avec PostCSS.",
+  "main": "src/js/main.js",
+  "scripts": {
+    "build": "postcss src/css/input.css -o public/css/styles.css",
+    "watch": "postcss src/css/input.css -o public/css/styles.css --watch",
+    "start": "live-server public"
+  },
+  "author": "Votre Nom",
+  "license": "MIT",
+  "dependencies": {
+    "tailwindcss": "^2.2.19"
+  },
+  "devDependencies": {
+    "postcss": "^8.3.6",
+    "autoprefixer": "^10.3.7",
+    "live-server": "^1.2.1"
+  }
+}

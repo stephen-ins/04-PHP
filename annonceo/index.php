@@ -35,7 +35,7 @@ include 'includes/navbar.php';
   <div class="container mx-auto px-4">
     <div class="max-w-3xl mx-auto text-center">
       <h1 class="text-4xl md:text-5xl font-bold mb-10">Votre bonheur est ici</h1>
-      <p class="text-xl my-10">Produit.</p>
+      <p class="text-xl my-10">😊</p>
 
       <!-- Search Form -->
       <form action="pages/recherche.php" method="GET" class="bg-white rounded-full p-1 flex flex-col md:flex-row">
@@ -62,91 +62,70 @@ include 'includes/navbar.php';
 </section>
 
 <!-- Latest Ads Section -->
-<section class="py-12 bg-gray-100">
+<section class="my-40  py-12 bg-gray-100">
   <div class="container mx-auto px-4">
     <h2 class="text-3xl font-bold mb-8 text-center">Nos annonces</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Ad 1 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
       <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
         <div class="h-48 bg-gray-300 relative">
-          <img src="https://via.placeholder.com/400x300" alt="iPhone 12 Pro" class="w-full h-full object-cover">
-          <span class="absolute top-2 right-2 bg-blue-600 text-white text-sm font-bold px-3 py-1 rounded-full">700 €</span>
+          <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+          <span class="absolute top-2 right-2 bg-blue-600 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
         </div>
         <div class="p-4">
-          <h3 class="text-lg font-bold mb-2">iPhone 12 Pro - 128 Go</h3>
-          <p class="text-gray-600 text-sm mb-4">Excellent état, encore sous garantie</p>
+          <h3 class="text-lg font-bold mb-2">Title product</h3>
+          <p class="text-gray-600 text-sm mb-4">Grade</p>
           <div class="flex justify-between items-center">
-            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Paris</span>
-            <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Il y a 2 heures</span>
+            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+            <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
           </div>
         </div>
       </div>
-
-      <!-- Ad 2 -->
       <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
         <div class="h-48 bg-gray-300 relative">
-          <img src="https://via.placeholder.com/400x300" alt="Vélo électrique" class="w-full h-full object-cover">
-          <span class="absolute top-2 right-2 bg-blue-600 text-white text-sm font-bold px-3 py-1 rounded-full">850 €</span>
+          <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+          <span class="absolute top-2 right-2 bg-blue-600 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
         </div>
         <div class="p-4">
-          <h3 class="text-lg font-bold mb-2">Vélo électrique Nakamura</h3>
-          <p class="text-gray-600 text-sm mb-4">1 an d'utilisation, très bon état</p>
+          <h3 class="text-lg font-bold mb-2">Title product</h3>
+          <p class="text-gray-600 text-sm mb-4">Grade</p>
           <div class="flex justify-between items-center">
-            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Lyon</span>
-            <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Il y a 1 jour</span>
+            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+            <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
           </div>
         </div>
       </div>
-
-      <!-- Ad 3 -->
       <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
         <div class="h-48 bg-gray-300 relative">
-          <img src="https://via.placeholder.com/400x300" alt="Canapé d'angle" class="w-full h-full object-cover">
-          <span class="absolute top-2 right-2 bg-blue-600 text-white text-sm font-bold px-3 py-1 rounded-full">450 €</span>
+          <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+          <span class="absolute top-2 right-2 bg-blue-600 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
         </div>
         <div class="p-4">
-          <h3 class="text-lg font-bold mb-2">Canapé d'angle convertible</h3>
-          <p class="text-gray-600 text-sm mb-4">Tissu gris, comme neuf</p>
+          <h3 class="text-lg font-bold mb-2">Title product</h3>
+          <p class="text-gray-600 text-sm mb-4">Grade</p>
           <div class="flex justify-between items-center">
-            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Marseille</span>
-            <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Il y a 3 jours</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ad 4 -->
-      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-        <div class="h-48 bg-gray-300 relative">
-          <img src="https://via.placeholder.com/400x300" alt="PlayStation 5" class="w-full h-full object-cover">
-          <span class="absolute top-2 right-2 bg-blue-600 text-white text-sm font-bold px-3 py-1 rounded-full">400 €</span>
-        </div>
-        <div class="p-4">
-          <h3 class="text-lg font-bold mb-2">PlayStation 5 avec 2 manettes</h3>
-          <p class="text-gray-600 text-sm mb-4">Achetée il y a 6 mois, peu utilisée</p>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> Toulouse</span>
-            <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Il y a 5 heures</span>
+            <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+            <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
           </div>
         </div>
       </div>
     </div>
 
     <div class="text-center mt-8">
-      <a href="pages/annonces.php" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition duration-300">
+      <a href="pages/annonces.php" class="inline-block bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded-full transition duration-300">
         Voir toutes les annonces
       </a>
     </div>
   </div>
 </section>
 
-<!-- Why Choose Us -->
-<section class="py-12 bg-white">
+
+<!-- <section class="py-12 bg-white">
   <div class="container mx-auto px-4">
     <h2 class="text-3xl font-bold mb-12 text-center">Pourquoi choisir Annonceo ?</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Feature 1 -->
       <div class="text-center">
         <div class="bg-blue-100 p-6 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
           <i class="fas fa-check text-blue-600 text-3xl"></i>
@@ -155,7 +134,6 @@ include 'includes/navbar.php';
         <p class="text-gray-600">Une selection premium.</p>
       </div>
 
-      <!-- Feature 2 -->
       <div class="text-center">
         <div class="bg-green-100 p-6 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
           <i class="fas fa-bolt text-green-600 text-3xl"></i>
@@ -164,7 +142,6 @@ include 'includes/navbar.php';
         <p class="text-gray-600">Ne perdez pas de temps.</p>
       </div>
 
-      <!-- Feature 3 -->
       <div class="text-center">
         <div class="bg-orange-100 p-6 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
           <i class="fas fa-hand-holding-heart text-orange-600 text-3xl"></i>
@@ -174,7 +151,7 @@ include 'includes/navbar.php';
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
 <!-- CTA Section -->
 <section class="bg-orange-500 py-16 text-white">

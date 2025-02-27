@@ -21,10 +21,14 @@
         </nav>
 
         <!-- User Menu -->
-        <div class="hidden md:flex items-center space-x-4">
+        <div class="hidden md:flex items-center space-x-10">
           <a href="/php/annonceo/pages/connexion.php" class="flex items-center hover:text-blue-600 transition duration-300">
-            <i class="fa-regular fa-user mr-2"></i>
+            <i class="fa-regular fa-user mr-3"></i>
             Connexion
+          </a>
+          <a href="/php/annonceo/pages/profil.php" class="flex items-center hover:text-blue-600 transition duration-300">
+            </i><i class="fa-solid fa-id-card mr-3"></i>
+            Votre Profil
           </a>
         </div>
       </div>

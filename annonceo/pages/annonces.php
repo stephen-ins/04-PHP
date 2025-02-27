@@ -52,16 +52,199 @@ include '../includes/navbar.php';
         </div>
 
         <div class="flex items-end">
-          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-300 w-full">
+          <button type="submit" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md transition duration-300 w-full">
             Filtrer les annonces
           </button>
         </div>
       </form>
     </div>
 
-    <!-- Liste des annonces -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Annonces s'afficheront ici, à interconnecter avec la base de données ultérieurement -->
+
+
+
+
+    <section class="py-12 bg-gray-100">
+      <div class="container mx-auto px-4">
+
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+            <div class="h-48 bg-gray-300 relative">
+              <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">Title product</h3>
+              <p class="text-gray-600 text-sm mb-4">Grade</p>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+                <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+            <div class="h-48 bg-gray-300 relative">
+              <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">Title product</h3>
+              <p class="text-gray-600 text-sm mb-4">Grade</p>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+                <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+            <div class="h-48 bg-gray-300 relative">
+              <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">Title product</h3>
+              <p class="text-gray-600 text-sm mb-4">Grade</p>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+                <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+            <div class="h-48 bg-gray-300 relative">
+              <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">Title product</h3>
+              <p class="text-gray-600 text-sm mb-4">Grade</p>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+                <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+            <div class="h-48 bg-gray-300 relative">
+              <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">Title product</h3>
+              <p class="text-gray-600 text-sm mb-4">Grade</p>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+                <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+            <div class="h-48 bg-gray-300 relative">
+              <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">Title product</h3>
+              <p class="text-gray-600 text-sm mb-4">Grade</p>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+                <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+            <div class="h-48 bg-gray-300 relative">
+              <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">Title product</h3>
+              <p class="text-gray-600 text-sm mb-4">Grade</p>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+                <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+            <div class="h-48 bg-gray-300 relative">
+              <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">Title product</h3>
+              <p class="text-gray-600 text-sm mb-4">Grade</p>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+                <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+            <div class="h-48 bg-gray-300 relative">
+              <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">Title product</h3>
+              <p class="text-gray-600 text-sm mb-4">Grade</p>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+                <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+            <div class="h-48 bg-gray-300 relative">
+              <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">Title product</h3>
+              <p class="text-gray-600 text-sm mb-4">Grade</p>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+                <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+            <div class="h-48 bg-gray-300 relative">
+              <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">Title product</h3>
+              <p class="text-gray-600 text-sm mb-4">Grade</p>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+                <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+            <div class="h-48 bg-gray-300 relative">
+              <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-bold mb-2">Title product</h3>
+              <p class="text-gray-600 text-sm mb-4">Grade</p>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1"></i> City</span>
+                <span class="text-gray-500 text-sm"><i class="far fa-clock mr-1"></i> Date</span>
+              </div>
+            </div>
+          </div>
+
+
+
+
+        </div>
+
+      </div>
+    </section>
 
 
 
@@ -69,7 +252,7 @@ include '../includes/navbar.php';
 
 
 
-    </div>
+  </div>
   </div>
 </section>
 

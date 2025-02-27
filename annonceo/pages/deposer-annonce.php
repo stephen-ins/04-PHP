@@ -60,10 +60,10 @@ include '../includes/navbar.php';
 
         <!-- Prix -->
         <div class="mb-6">
-          <label for="prix" class="block text-sm font-medium text-gray-700 mb-1">Prix *</label>
+          <label for="prix" class="block text-sm font-medium text-gray-700 mb-1">Prix en € *</label>
           <div class="flex items-center">
             <input type="number" name="prix" id="prix" required class="w-full border border-gray-300 rounded-md px-3 py-2">
-            <span class="ml-2 text-gray-700">€</span>
+            <!-- <span class="ml-2 text-gray-700">€</span> -->
           </div>
         </div>
 

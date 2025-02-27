@@ -1,5 +1,4 @@
-CREATE DATABASE annonceo;
-
+-- Base de données: `annonceo`
 USE annonceo;
 
 CREATE TABLE

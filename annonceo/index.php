@@ -1,8 +1,8 @@
 <?php
 // Inclusion des parties communes
 include 'includes/header.php';
-
-
+// include 'includes/init.php';
+include 'includes/init.php';
 
 
 
@@ -113,7 +113,7 @@ include 'includes/navbar.php';
     </div>
 
     <div class="text-center mt-8">
-      <a href="pages/annonces.php" class="inline-block bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded-full transition duration-300">
+      <a href="pages/annonces.php" class="inline-block bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full transition duration-300">
         Voir toutes les annonces
       </a>
     </div>

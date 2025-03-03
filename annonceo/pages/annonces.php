@@ -1,23 +1,6 @@
 <?php
 // Inclusion des parties communes
 include '../includes/header.php';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 include '../includes/navbar.php';
 ?>
 
@@ -52,24 +35,19 @@ include '../includes/navbar.php';
         </div>
 
         <div class="flex items-end">
-          <button type="submit" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md transition duration-300 w-full">
+          <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md transition duration-300 w-full">
             Filtrer les annonces
           </button>
         </div>
       </form>
     </div>
 
-
-
-
-
     <section class="py-12 bg-gray-100">
       <div class="container mx-auto px-4">
 
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+          <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 hover:bg-orange-200">
             <div class="h-48 bg-gray-300 relative">
               <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
               <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
@@ -83,7 +61,7 @@ include '../includes/navbar.php';
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+          <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 hover:bg-orange-200">
             <div class="h-48 bg-gray-300 relative">
               <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
               <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
@@ -97,7 +75,7 @@ include '../includes/navbar.php';
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+          <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 hover:bg-orange-200">
             <div class="h-48 bg-gray-300 relative">
               <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
               <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
@@ -111,7 +89,7 @@ include '../includes/navbar.php';
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+          <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 hover:bg-orange-200">
             <div class="h-48 bg-gray-300 relative">
               <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
               <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
@@ -125,7 +103,7 @@ include '../includes/navbar.php';
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+          <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 hover:bg-orange-200">
             <div class="h-48 bg-gray-300 relative">
               <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
               <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
@@ -139,7 +117,7 @@ include '../includes/navbar.php';
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+          <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 hover:bg-orange-200">
             <div class="h-48 bg-gray-300 relative">
               <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
               <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
@@ -153,7 +131,7 @@ include '../includes/navbar.php';
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+          <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 hover:bg-orange-200">
             <div class="h-48 bg-gray-300 relative">
               <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
               <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
@@ -167,7 +145,7 @@ include '../includes/navbar.php';
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+          <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 hover:bg-orange-200">
             <div class="h-48 bg-gray-300 relative">
               <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
               <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
@@ -181,7 +159,7 @@ include '../includes/navbar.php';
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+          <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 hover:bg-orange-200">
             <div class="h-48 bg-gray-300 relative">
               <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
               <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
@@ -195,7 +173,7 @@ include '../includes/navbar.php';
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+          <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 hover:bg-orange-200">
             <div class="h-48 bg-gray-300 relative">
               <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
               <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
@@ -209,7 +187,7 @@ include '../includes/navbar.php';
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+          <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 hover:bg-orange-200">
             <div class="h-48 bg-gray-300 relative">
               <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
               <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
@@ -223,7 +201,7 @@ include '../includes/navbar.php';
               </div>
             </div>
           </div>
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+          <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 hover:bg-orange-200">
             <div class="h-48 bg-gray-300 relative">
               <img src="https://via.placeholder.com/400x300" alt="material" class="w-full h-full object-cover">
               <span class="absolute top-2 right-2 bg-slate-700 text-white text-sm font-bold px-3 py-1 rounded-full">0 €</span>
@@ -237,20 +215,11 @@ include '../includes/navbar.php';
               </div>
             </div>
           </div>
-
-
-
 
         </div>
 
       </div>
     </section>
-
-
-
-
-
-
 
   </div>
   </div>

@@ -67,10 +67,18 @@ include '../includes/navbar.php';
           </div>
         </div>
 
-        <!-- Photo -->
+        <!-- Photos -->
         <div class="mb-6">
-          <label for="photo" class="block text-sm font-medium text-gray-700 mb-1">Photo principale *</label>
-          <input type="file" name="photo" id="photo" accept="image/*" required class="w-full border border-gray-300 rounded-md px-3 py-2">
+          <label for="photo1" class="block text-sm font-medium text-gray-700 mb-1">Photo 1 *</label>
+          <input type="file" name="photo1" id="photo1" accept="image/*" required class="w-full border border-gray-300 rounded-md px-3 py-2">
+        </div>
+        <div class="mb-6">
+          <label for="photo2" class="block text-sm font-medium text-gray-700 mb-1">Photo 2</label>
+          <input type="file" name="photo2" id="photo2" accept="image/*" class="w-full border border-gray-300 rounded-md px-3 py-2">
+        </div>
+        <div class="mb-6">
+          <label for="photo3" class="block text-sm font-medium text-gray-700 mb-1">Photo 3</label>
+          <input type="file" name="photo3" id="photo3" accept="image/*" class="w-full border border-gray-300 rounded-md px-3 py-2">
         </div>
 
         <!-- Localisation -->
